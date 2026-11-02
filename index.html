@@ -112,8 +112,15 @@ button{font:inherit;cursor:pointer;border:none}
 .ficha svg{width:26px;height:26px}
 .orden{width:34px;height:34px;border-radius:10px;background:var(--papel);display:grid;place-items:center;font-weight:800;color:var(--tinta-2);flex:none;font-size:14px}
 .ayuda{font-size:13px;color:var(--tinta-2);margin:4px 0 0}
-.flechas{display:flex;flex-direction:column;gap:2px}
-.flechas button{background:var(--papel);width:30px;height:19px;border-radius:6px;font-size:11px;color:var(--tinta-2);line-height:1}
+.fila-jugador{min-height:68px}
+.flechas{display:flex;flex-direction:column;gap:6px;flex:none}
+.flechas button{width:48px;height:31px;border-radius:10px;background:var(--queso-2);border:2px solid #3a2414;box-shadow:0 3px 0 #b8901a;display:grid;place-items:center;padding:0;transition:transform .08s}
+.flechas button svg{width:22px;height:22px}
+.flechas button:active{transform:translateY(2px);box-shadow:0 1px 0 #b8901a}
+.flechas button:disabled{background:#e9dfc8;border-color:#cbbca0;box-shadow:none;opacity:.6}
+.fila-jugador.movida{animation:movida .45s ease-out}
+@keyframes movida{0%{background:rgba(244,196,48,.45)}100%{background:transparent}}
+.fila-jugador{border-radius:14px;padding:2px 0}
 
 /* ---------- PUNTUACIÓN ---------- */
 .marcador-vivo{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
@@ -400,6 +407,7 @@ let sonido = ls.get(LS.sonido, true);
 let modoPrueba = false;
 let configN = 2;
 let configJug = [];
+let filaMovida = -1;
 
 /* ---------- Utilidades ---------- */
 const $ = s => document.querySelector(s);
@@ -533,7 +541,8 @@ function pintaConfig(){
     fila.innerHTML=`<div class="orden">${i+1}º</div>
       <button class="ficha" style="background:${col.hex}22;border-color:${col.hex}" aria-label="Cambiar color">${ratSVG(col.hex)}</button>
       <input maxlength="14" placeholder="Familia ${col.nom}" value="${esc(j.nombre)}">
-      <div class="flechas"><button aria-label="Subir">▲</button><button aria-label="Bajar">▼</button></div>`;
+      ${configJug.length>1?`<div class="flechas"><button aria-label="Subir" ${i===0?"disabled":""}><svg viewBox="0 0 24 24"><path d="M5 15 L12 8 L19 15" fill="none" stroke="#3a2414" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button aria-label="Bajar" ${i===configJug.length-1?"disabled":""}><svg viewBox="0 0 24 24"><path d="M5 9 L12 16 L19 9" fill="none" stroke="#3a2414" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>`:""}`;
+    if(i===filaMovida) fila.classList.add("movida");
     const [bCol]=fila.querySelectorAll('.ficha');
     const inp=fila.querySelector('input');
     const [up,down]=fila.querySelectorAll('.flechas button');
@@ -544,10 +553,13 @@ function pintaConfig(){
       for(let n=0;n<COLORES.length;n++){ idx=(idx+1)%COLORES.length; if(!usados.includes(COLORES[idx].id)) break; }
       j.color=COLORES[idx].id; clic(); pintaConfig();
     };
-    up.onclick=()=>{ if(i>0){ [configJug[i-1],configJug[i]]=[configJug[i],configJug[i-1]]; clic(); pintaConfig(); } };
-    down.onclick=()=>{ if(i<configJug.length-1){ [configJug[i+1],configJug[i]]=[configJug[i],configJug[i+1]]; clic(); pintaConfig(); } };
+    if(up){
+    up.onclick=()=>{ if(i>0){ [configJug[i-1],configJug[i]]=[configJug[i],configJug[i-1]]; filaMovida=i-1; clic(); pintaConfig(); } };
+    down.onclick=()=>{ if(i<configJug.length-1){ [configJug[i+1],configJug[i]]=[configJug[i],configJug[i+1]]; filaMovida=i+1; clic(); pintaConfig(); } };
+    }
     L.appendChild(fila);
   });
+  filaMovida=-1;
 }
 $$('#selNum button').forEach(b=>b.onclick=()=>{ configN=+b.dataset.n; clic(); ajustarJugadores(); pintaConfig(); });
 $('#btnEmpezar').onclick=()=>{

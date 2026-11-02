@@ -1,4 +1,4 @@
-const CACHE = 'ratas-wistar-v11';
+const CACHE = 'ratas-wistar-v12';
 const ICONOS = ['marcador','habilidades','camas','habitaciones','invitados','inventos','finales','electricidad','recursos','comodines'].map(n => `./iconos/${n}.png`);
 const ARCHIVOS = ['./', './index.html', './splash.jpg', './icono-app.png', './splash-alto.jpg', './iconos/menu/nueva.svg', './iconos/menu/continuar.svg', './iconos/menu/historial.svg', './iconos/menu/ayuda.svg', './iconos/menu/sonido-on.svg', './iconos/menu/sonido-off.svg', ...['volver','madriguera','resumen','editar','borrar','guardar','revancha','corona','llave'].map(n => `./iconos/menu/${n}.svg`), './manifest.json', './icon-192.png', './icon-512.png', './apple-touch-icon.png', ...ICONOS];
 
