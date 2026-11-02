@@ -45,8 +45,16 @@ button{font:inherit;cursor:pointer;border:none}
 #splash{position:fixed;inset:0;max-width:none;padding:0;justify-content:center;align-items:center;cursor:pointer;user-select:none;overflow:hidden;background:#2f4a2b}
 #splash.activa{display:flex}
 #splash .fondo-splash{position:absolute;inset:-40px;background:url(splash.jpg) center/cover;filter:blur(24px) brightness(.75);transform:scale(1.1)}
-#splash .lienzo-splash{position:relative;height:min(100dvh, calc(100vw * 1672 / 941));aspect-ratio:941/1672;box-shadow:0 0 60px rgba(0,0,0,.45);animation:entraSplash .9s ease-out}
-#splash .lienzo-splash img{display:block;width:100%;height:100%;object-fit:cover}
+#splash .lienzo-splash{position:relative;height:min(100vh, calc(100vw * 1672 / 941));height:min(100dvh, calc(100vw * 1672 / 941));aspect-ratio:941/1672;background:url(splash.jpg) center/cover no-repeat;box-shadow:0 0 60px rgba(0,0,0,.45);animation:entraSplash .9s ease-out}
+/* Móviles en vertical: versión alargada a pantalla completa, sin franjas */
+@media (max-aspect-ratio: 13/20){
+  #splash .lienzo-splash{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:max(100vw, calc(100vh * 941 / 2070));width:max(100vw, calc(100dvh * 941 / 2070));
+    height:auto;aspect-ratio:941/2070;background-image:url(splash-alto.jpg);box-shadow:none;animation:fundeSplash .9s ease-out}
+  #splash .brillo-toca{bottom:15.6%!important;height:5.7%!important}
+  #splash .fondo-splash{display:none}
+}
+@keyframes fundeSplash{from{opacity:0}to{opacity:1}}
 #splash .brillo-toca{position:absolute;left:18%;right:18%;bottom:7.5%;height:7%;border-radius:50%;background:radial-gradient(ellipse at center, rgba(255,221,107,.55), rgba(255,221,107,0) 70%);mix-blend-mode:screen;animation:latido 1.6s ease-in-out infinite;pointer-events:none}
 #splash .huellas{display:none}
 #splash .huellas span{position:absolute;width:9px;height:9px;border-radius:50%;background:rgba(255,221,107,.7);animation:pisada 4s linear infinite}
@@ -68,6 +76,7 @@ button{font:inherit;cursor:pointer;border:none}
 .btn-madera{background:var(--madera);color:var(--bata);box-shadow:0 5px 0 #5f3c20}
 .btn-claro{background:rgba(255,255,255,.14);color:var(--bata)}
 .btn-linea{background:transparent;color:var(--tinta);border:2px dashed var(--tinta-2)}
+.ico-btn{width:38px;height:38px;flex:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.18))}
 .btn:disabled{opacity:.45;pointer-events:none}
 .pila{display:flex;flex-direction:column;gap:14px}
 .pie-legal{margin-top:auto;padding-top:22px;color:rgba(251,246,234,.6);font-size:11.5px;text-align:center;line-height:1.5}
@@ -166,8 +175,8 @@ tfoot td{font-family:'Baloo 2';font-size:22px;font-weight:800;color:var(--tinta)
 .modal .tarjeta{max-width:440px;width:100%;max-height:85dvh;overflow:auto}
 .modal h3{font-size:24px;margin-bottom:8px}
 .modal ul{padding-left:0;list-style:none;line-height:1.55;font-size:14.5px}
-.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(120px);background:var(--tinta);color:var(--bata);padding:12px 18px;border-radius:14px;font-weight:700;transition:transform .3s;z-index:60;max-width:90vw;text-align:center}
-.toast.ver{transform:translateX(-50%) translateY(0)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%, calc(100% + 40px + env(safe-area-inset-bottom)));opacity:0;visibility:hidden;pointer-events:none;background:var(--tinta);color:var(--bata);padding:12px 18px;border-radius:14px;font-weight:700;transition:transform .3s, opacity .3s, visibility 0s .3s;z-index:60;width:max-content;max-width:90vw;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.3)}
+.toast.ver{transform:translate(-50%,0);opacity:1;visibility:visible;transition:transform .3s, opacity .3s, visibility 0s}
 @media (min-width:560px){.cabecera h2{font-size:32px}}
 </style>
 </head>
@@ -176,8 +185,7 @@ tfoot td{font-family:'Baloo 2';font-size:22px;font-weight:800;color:var(--tinta)
 <!-- ============ SPLASH ============ -->
 <section id="splash" class="pantalla activa" aria-label="Pantalla de entrada">
   <div class="fondo-splash"></div>
-  <div class="lienzo-splash">
-    <img src="splash.jpg" alt="Ratas de Wistar · Contador. Toca para empezar">
+  <div class="lienzo-splash" role="img" aria-label="Ratas de Wistar · Contador. Toca para empezar">
     <div class="brillo-toca"></div>
     <div class="huellas" id="huellas"></div>
   </div>
@@ -214,10 +222,10 @@ tfoot td{font-family:'Baloo 2';font-size:22px;font-weight:800;color:var(--tinta)
   </div>
   <div class="pila">
     <div class="aviso-prueba oculto" id="avisoPrueba"></div>
-    <button class="btn btn-queso" id="btnNueva">🐀 Nueva partida</button>
-    <button class="btn btn-madera oculto" id="btnContinuar">⏯️ Continuar partida</button>
-    <button class="btn btn-claro" id="btnHistorial">📜 Historial</button>
-    <button class="btn btn-claro" id="btnAyuda">🧪 Cómo se puntúa</button>
+    <button class="btn btn-queso" id="btnNueva"><img class="ico-btn" src="iconos/menu/nueva.svg" alt="">Nueva partida</button>
+    <button class="btn btn-madera oculto" id="btnContinuar"><img class="ico-btn" src="iconos/menu/continuar.svg" alt="">Continuar partida</button>
+    <button class="btn btn-claro" id="btnHistorial"><img class="ico-btn" src="iconos/menu/historial.svg" alt="">Historial</button>
+    <button class="btn btn-claro" id="btnAyuda"><img class="ico-btn" src="iconos/menu/ayuda.svg" alt="">Cómo se puntúa</button>
   </div>
   <div class="pie-legal" data-legal></div>
 </section>
@@ -298,7 +306,7 @@ tfoot td{font-family:'Baloo 2';font-size:22px;font-weight:800;color:var(--tinta)
 <!-- ============ MODALES ============ -->
 <div class="modal" id="modalAyuda">
   <div class="tarjeta">
-    <h3>🧪 Puntuación final</h3>
+    <h3><img class="ico-btn" src="iconos/menu/ayuda.svg" alt="" style="vertical-align:-8px;margin-right:6px">Puntuación final</h3>
     <p class="ayuda">Al acabar la 5.ª ronda se suman a los PV del marcador:</p>
     <ul>
       <li><img class="mini" src="iconos/habilidades.png" alt="">PV de los espacios de <b>habilidad</b> de tu tablero de los que retiraste cubo (+2 si completas la pareja que lo indica).</li>
