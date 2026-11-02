@@ -442,6 +442,9 @@ const COLORES = [
   {id:'blanco', hex:'#efe6d2', txt:'#8a7552', nom:'Blanca'}
 ];
 const FAMILIAS_CON_AVATAR=['rojo','azul','amarillo','blanco'];
+const RX_NOMBRE_DEF=/^familia\s+(roja|azul|amarilla|blanca|verde|morada|gris)$/i;
+const esNombreDef = n => !n || RX_NOMBRE_DEF.test(String(n).trim());
+const nombreDef = id => `Familia ${(COLORES.find(c=>c.id===id)||{nom:'Blanca'}).nom}`;
 function avatar(id, clase='avatar'){
   if(FAMILIAS_CON_AVATAR.includes(id)) return `<img class="${clase}" src="iconos/familias/${id}.webp" alt="">`;
   return ratSVG((COLORES.find(c=>c.id===id)||{hex:'#999'}).hex);
@@ -481,8 +484,10 @@ let partida = ls.get(LS.partida, null);
 /* Migración: la antigua familia verde pasa a ser la blanca (colores reales del juego) */
 (function migraColores(){
   const fix=c=>(c==='verde'?'blanco':(['morado','gris'].includes(c)?'blanco':c));
-  if(partida && partida.jugadores){ partida.jugadores.forEach(j=>j.color=fix(j.color)); ls.set(LS.partida,partida); }
-  const h=ls.get(LS.hist,[]); if(h.length){ h.forEach(p=>p.ranking.forEach(r=>r.color=fix(r.color))); ls.set(LS.hist,h); }
+  const arregla=j=>{ j.color=fix(j.color); if(esNombreDef(j.nombre)) j.nombre=nombreDef(j.color); };
+  if(partida && partida.jugadores){ partida.jugadores.forEach(arregla); ls.set(LS.partida,partida); }
+  const h=ls.get(LS.hist,[]); if(h.length){ h.forEach(p=>p.ranking.forEach(arregla)); ls.set(LS.hist,h); }
+  const u=ls.get('rw_ultimos',null); if(u){ u.forEach(j=>{ j.color=fix(j.color); if(esNombreDef(j.nombre)) j.nombre=''; }); ls.set('rw_ultimos',u); }
 })();
 let sonido = ls.get(LS.sonido, true);
 let modoPrueba = false;
@@ -622,7 +627,7 @@ function abrirConfig(previos){
   if(ultimos && ultimos.length){
     configN=Math.min(4,ultimos.length); configJug=ultimos.slice(0,4).map(j=>({...j}));
     // familias que ya no existen (morada/gris) → se reasignan a una libre
-    configJug.forEach(j=>{ if(j.color==='verde') j.color='blanco'; });
+    configJug.forEach(j=>{ if(j.color==='verde') j.color='blanco'; if(esNombreDef(j.nombre)) j.nombre=''; });
     configJug.forEach((j,k)=>{ if(!COLORES.some(c=>c.id===j.color) || configJug.slice(0,k).some(x=>x.color===j.color)){
       const libre=COLORES.find(c=>!configJug.some(x=>x!==j && x.color===c.id)); j.color=libre?libre.id:'rojo'; } });
   }
@@ -674,7 +679,7 @@ $('#btnEmpezar').onclick=()=>{
     const col=COLORES.find(c=>c.id===j.color);
     return {nombre:(j.nombre||'').trim() || `Familia ${col.nom}`, color:j.color, orden:i};
   });
-  ls.set('rw_ultimos', jug.map(j=>({nombre:j.nombre, color:j.color})));
+  ls.set('rw_ultimos', jug.map(j=>({nombre: esNombreDef(j.nombre) ? '' : j.nombre, color:j.color})));
   const v={}; CATEGORIAS.forEach(c=>v[c.id]=jug.map(()=> c.tipo==='toggle'?false:0));
   partida={id:Date.now(), fecha:new Date().toISOString(), jugadores:jug, valores:v, paso:0, terminada:false, contadaPrueba:false};
   if(enPrueba()){ ls.set(LS.usadas, ls.get(LS.usadas,0)+1); partida.contadaPrueba=true; }
@@ -902,7 +907,23 @@ $('#btnBorrarHist').onclick=()=>{
 };
 
 /* ---------- PWA ---------- */
-if('serviceWorker' in navigator){ window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{})); }
+if('serviceWorker' in navigator){
+  const habiaControl = !!navigator.serviceWorker.controller;
+  let recargado=false;
+  // Cuando se instala una versión nueva, recarga una vez para mostrarla
+  navigator.serviceWorker.addEventListener('controllerchange', ()=>{
+    if(!habiaControl || recargado) return;
+    // no interrumpir a media partida: solo si estamos en splash, acceso o menú
+    const enCurso = ['config','puntuar','resultados'].some(id=>document.getElementById(id).classList.contains('activa'));
+    if(enCurso) return;
+    recargado=true; location.reload();
+  });
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js',{updateViaCache:'none'})
+      .then(reg=>{ reg.update(); document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') reg.update(); }); })
+      .catch(()=>{});
+  });
+}
 </script>
 </body>
 </html>

@@ -1,22 +1,50 @@
-const CACHE = 'ratas-wistar-v19';
+/* Contador Ratas de Wistar · PenTech
+   Estrategia: RED PRIMERO (siempre la última versión publicada) y caché solo
+   como respaldo sin conexión. Al instalar se descarga todo saltándose la caché
+   HTTP del navegador para no guardar versiones antiguas. */
+const CACHE = 'ratas-wistar-v21';
 const ICONOS = ['marcador','habilidades','camas','habitaciones','invitados','inventos','finales','electricidad','recursos','comodines'].map(n => `./iconos/${n}.png`);
-const ARCHIVOS = ['./', './index.html', './splash.jpg', './icono-app.png', './splash-alto.jpg', './iconos/menu/nueva.svg', './iconos/menu/continuar.svg', './iconos/menu/historial.svg', './iconos/menu/ayuda.svg', './iconos/menu/sonido-on.svg', './iconos/menu/sonido-off.svg', ...['volver','madriguera','resumen','editar','borrar','guardar','revancha','corona','llave'].map(n => `./iconos/menu/${n}.svg`), './sonidos/chillido.mp3', './sonidos/victoria.mp3', ...['rojo','azul','amarillo','blanco'].map(n => `./iconos/familias/${n}.webp`), './manifest.json', './icon-192.png', './icon-512.png', './apple-touch-icon.png', ...ICONOS];
+const MENU = ['nueva','continuar','historial','ayuda','sonido-on','sonido-off','volver','madriguera','resumen','editar','borrar','guardar','revancha','corona','llave'].map(n => `./iconos/menu/${n}.svg`);
+const FAMILIAS = ['azul','rojo','amarillo','blanco'].map(n => `./iconos/familias/${n}.webp`);
+const ARCHIVOS = ['./', './index.html', './manifest.json', './splash.jpg', './splash-alto.jpg', './icono-app.png',
+  './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png',
+  './sonidos/chillido.mp3', './sonidos/victoria.mp3', ...MENU, ...FAMILIAS, ...ICONOS];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ARCHIVOS)).then(() => self.skipWaiting()));
+  e.waitUntil(
+    caches.open(CACHE)
+      .then(c => Promise.all(ARCHIVOS.map(u => c.add(new Request(u, { cache: 'reload' })).catch(() => {}))))
+      .then(() => self.skipWaiting())
+  );
 });
+
 self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+  e.waitUntil(
+    caches.keys()
+      .then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
 });
+
 self.addEventListener('fetch', e => {
-  if (e.request.method !== 'GET') return;
+  const req = e.request;
+  if (req.method !== 'GET') return;
+  const mismoOrigen = req.url.startsWith(self.location.origin);
+  const fuentes = req.url.includes('fonts.g');
+  if (!mismoOrigen && !fuentes) return;
+
   e.respondWith(
-    caches.match(e.request).then(r => r || fetch(e.request).then(resp => {
-      if (resp.ok && (e.request.url.startsWith(self.location.origin) || e.request.url.includes('fonts.g'))) {
-        const copia = resp.clone();
-        caches.open(CACHE).then(c => c.put(e.request, copia));
-      }
-      return resp;
-    }).catch(() => caches.match('./index.html')))
+    fetch(mismoOrigen ? new Request(req, { cache: 'no-cache' }) : req)
+      .then(resp => {
+        if (resp && resp.ok) {
+          const copia = resp.clone();
+          caches.open(CACHE).then(c => c.put(req, copia));
+        }
+        return resp;
+      })
+      .catch(() =>
+        caches.match(req, { ignoreSearch: true })
+          .then(r => r || (req.mode === 'navigate' ? caches.match('./index.html') : undefined))
+      )
   );
 });
