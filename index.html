@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2f4a2b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ratas de Wistar">
+<meta name="description" content="Contador de puntuación para Ratas de Wistar">
+<title>Contador Ratas de Wistar</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bosque:#2f4a2b; --bosque-2:#3f6138; --musgo:#6f8f4e;
+  --madera:#8a5a34; --madera-2:#b07a4a;
+  --queso:#f4c430; --queso-2:#ffdd6b;
+  --bata:#fbf6ea; --papel:#f3ead3; --tinta:#2b2118; --tinta-2:#6b5a48;
+  --rojo:#c4473a; --azul:#3f6fa8; --verde:#4f8a3c; --amarillo:#d9a21b;
+  --sombra:0 6px 18px rgba(30,20,10,.18);
+  --r:18px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{
+  font-family:'Nunito',system-ui,sans-serif;color:var(--tinta);
+  background:var(--bosque);
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(244,196,48,.10) 0 120px, transparent 121px),
+    radial-gradient(circle at 90% 85%, rgba(244,196,48,.08) 0 160px, transparent 161px),
+    repeating-linear-gradient(90deg, rgba(0,0,0,.05) 0 2px, transparent 2px 46px);
+  overflow-x:hidden;
+}
+h1,h2,h3,.titulo{font-family:'Baloo 2',cursive;margin:0;line-height:1.05}
+button{font:inherit;cursor:pointer;border:none}
+.pantalla{display:none;min-height:100dvh;padding:calc(16px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));max-width:620px;margin:0 auto;flex-direction:column}
+.pantalla.activa{display:flex}
+
+/* ---------- SPLASH ---------- */
+#splash{position:fixed;inset:0;max-width:none;padding:0;justify-content:center;align-items:center;cursor:pointer;user-select:none;overflow:hidden;background:#2f4a2b}
+#splash.activa{display:flex}
+#splash .fondo-splash{position:absolute;inset:-40px;background:url(splash.jpg) center/cover;filter:blur(24px) brightness(.75);transform:scale(1.1)}
+#splash .lienzo-splash{position:relative;height:min(100dvh, calc(100vw * 1672 / 941));aspect-ratio:941/1672;box-shadow:0 0 60px rgba(0,0,0,.45);animation:entraSplash .9s ease-out}
+#splash .lienzo-splash img{display:block;width:100%;height:100%;object-fit:cover}
+#splash .brillo-toca{position:absolute;left:18%;right:18%;bottom:7.5%;height:7%;border-radius:50%;background:radial-gradient(ellipse at center, rgba(255,221,107,.55), rgba(255,221,107,0) 70%);mix-blend-mode:screen;animation:latido 1.6s ease-in-out infinite;pointer-events:none}
+#splash .huellas{display:none}
+#splash .huellas span{position:absolute;width:9px;height:9px;border-radius:50%;background:rgba(255,221,107,.7);animation:pisada 4s linear infinite}
+@keyframes entraSplash{from{opacity:0;transform:scale(1.04)}to{opacity:1;transform:none}}
+@keyframes flota{50%{transform:translateY(-8px) rotate(-2deg)}}
+@keyframes latido{50%{opacity:.35;transform:scale(.97)}}
+@keyframes pisada{0%,100%{opacity:0}20%,60%{opacity:1}}
+
+/* ---------- COMUNES ---------- */
+.cabecera{display:flex;align-items:center;gap:10px;color:var(--bata);margin-bottom:14px}
+.cabecera h2{font-size:28px;color:var(--queso);flex:1}
+.icono-btn{width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.12);color:var(--bata);display:grid;place-items:center;font-size:20px}
+.icono-btn:active{transform:scale(.94)}
+.tarjeta{background:var(--bata);border-radius:var(--r);padding:18px;box-shadow:var(--sombra);position:relative}
+.tarjeta + .tarjeta{margin-top:14px}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px 18px;border-radius:16px;font-family:'Baloo 2';font-size:21px;font-weight:800;transition:transform .08s}
+.btn:active{transform:scale(.97)}
+.btn-queso{background:var(--queso);color:var(--tinta);box-shadow:0 5px 0 #b8901a}
+.btn-madera{background:var(--madera);color:var(--bata);box-shadow:0 5px 0 #5f3c20}
+.btn-claro{background:rgba(255,255,255,.14);color:var(--bata)}
+.btn-linea{background:transparent;color:var(--tinta);border:2px dashed var(--tinta-2)}
+.btn:disabled{opacity:.45;pointer-events:none}
+.pila{display:flex;flex-direction:column;gap:14px}
+.pie-legal{margin-top:auto;padding-top:22px;color:rgba(251,246,234,.6);font-size:11.5px;text-align:center;line-height:1.5}
+.pie-legal b{color:rgba(251,246,234,.85)}
+.oculto{display:none!important}
+
+/* ---------- MENÚ ---------- */
+#menu .marca{display:flex;flex-direction:column;align-items:center;gap:6px;margin:10px 0 26px;color:var(--bata)}
+#menu .marca img{width:min(52vw,210px);border-radius:22%;box-shadow:0 10px 24px rgba(0,0,0,.35),0 0 0 4px rgba(244,196,48,.35);margin-bottom:6px}
+#menu .marca h1{font-size:40px;color:var(--queso);text-shadow:0 2px 0 var(--madera)}
+#menu .marca p{margin:0;opacity:.8;font-weight:600}
+.aviso-prueba{background:rgba(244,196,48,.15);border:1px solid rgba(244,196,48,.5);color:var(--queso-2);padding:10px 14px;border-radius:12px;text-align:center;font-weight:700;font-size:14px}
+
+/* ---------- ACCESO / LICENCIA ---------- */
+#acceso .tarjeta{text-align:center}
+#acceso input{width:100%;padding:14px;border-radius:12px;border:2px solid #d9cbb0;font:inherit;font-size:18px;text-align:center;letter-spacing:2px;text-transform:uppercase;background:#fff;margin:12px 0}
+.error{color:var(--rojo);font-weight:800;min-height:22px}
+
+/* ---------- CONFIGURACIÓN ---------- */
+.selector-num{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.selector-num button{padding:14px 0;border-radius:14px;background:var(--papel);font-family:'Baloo 2';font-size:26px;font-weight:800;color:var(--tinta-2)}
+.selector-num button.sel{background:var(--queso);color:var(--tinta);box-shadow:inset 0 -4px 0 #b8901a}
+.etiqueta{font-weight:800;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--tinta-2);margin:0 0 10px}
+.fila-jugador{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.fila-jugador input{flex:1;min-width:0;padding:13px 14px;border-radius:12px;border:2px solid #e2d6bd;font:inherit;font-size:17px;font-weight:700;background:#fff}
+.fila-jugador input:focus{outline:none;border-color:var(--queso)}
+.ficha{width:40px;height:40px;border-radius:50%;flex:none;display:grid;place-items:center;border:3px solid rgba(0,0,0,.15);position:relative}
+.ficha svg{width:26px;height:26px}
+.orden{width:34px;height:34px;border-radius:10px;background:var(--papel);display:grid;place-items:center;font-weight:800;color:var(--tinta-2);flex:none;font-size:14px}
+.ayuda{font-size:13px;color:var(--tinta-2);margin:4px 0 0}
+.flechas{display:flex;flex-direction:column;gap:2px}
+.flechas button{background:var(--papel);width:30px;height:19px;border-radius:6px;font-size:11px;color:var(--tinta-2);line-height:1}
+
+/* ---------- PUNTUACIÓN ---------- */
+.marcador-vivo{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
+.marcador-vivo::-webkit-scrollbar{display:none}
+.chip{flex:1 0 auto;min-width:72px;background:rgba(255,255,255,.1);border-radius:14px;padding:8px 10px;color:var(--bata);text-align:center;border-bottom:4px solid var(--c)}
+.chip .n{font-size:12px;font-weight:700;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px}
+.chip .t{font-family:'Baloo 2';font-size:26px;font-weight:800;color:var(--queso)}
+.progreso{display:flex;gap:5px;margin-bottom:12px}
+.progreso span{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.18);cursor:pointer}
+.progreso span.hecho{background:var(--musgo)}
+.progreso span.actual{background:var(--queso)}
+.cat-cabeza{display:flex;gap:14px;align-items:center;margin-bottom:6px}
+.cat-icono{width:88px;height:88px;flex:none;display:grid;place-items:center;margin:-10px -4px -6px -8px}
+.cat-icono img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 6px rgba(60,40,20,.25));animation:aparece .35s ease-out}
+@keyframes aparece{from{transform:scale(.6) rotate(-8deg);opacity:0}to{transform:none;opacity:1}}
+img.mini{width:26px;height:26px;vertical-align:middle;margin-right:4px;object-fit:contain}
+.modal li img.mini{width:22px;height:22px}
+.cat-cabeza h3{font-size:24px}
+.cat-cabeza .paso{font-size:12px;font-weight:800;color:var(--tinta-2);letter-spacing:1px;text-transform:uppercase}
+.cat-desc{color:var(--tinta-2);font-size:14.5px;line-height:1.45;margin:4px 0 14px}
+.fila-punt{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #eadfc7}
+.fila-punt .nombre{flex:1;min-width:0;font-weight:800;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fila-punt .extra{font-size:12.5px;color:var(--tinta-2);font-weight:700}
+.stepper{display:flex;align-items:center;gap:6px}
+.stepper button{width:44px;height:44px;border-radius:13px;background:var(--papel);font-size:24px;font-weight:800;color:var(--tinta)}
+.stepper button:active{background:var(--queso)}
+.stepper input{width:58px;height:44px;text-align:center;border:2px solid #e2d6bd;border-radius:12px;font-family:'Baloo 2';font-size:24px;font-weight:800;background:#fff;color:var(--tinta);-moz-appearance:textfield}
+.stepper input::-webkit-outer-spin-button,.stepper input::-webkit-inner-spin-button{-webkit-appearance:none}
+.interruptor{width:64px;height:36px;border-radius:18px;background:#ddd0b6;position:relative;transition:background .2s;flex:none}
+.interruptor::after{content:'';position:absolute;top:4px;left:4px;width:28px;height:28px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.2);transition:left .2s}
+.interruptor.on{background:var(--verde)}
+.interruptor.on::after{left:32px}
+.nav-cat{display:flex;gap:10px;margin-top:16px}
+.nav-cat .btn{font-size:19px}
+
+/* ---------- RESULTADOS ---------- */
+.podio{display:flex;align-items:flex-end;justify-content:center;gap:10px;margin:8px 0 18px;min-height:190px}
+.peana{flex:1;max-width:130px;text-align:center;color:var(--bata)}
+.peana .bloque{border-radius:14px 14px 4px 4px;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;padding-top:10px;font-family:'Baloo 2';font-weight:800;color:var(--tinta)}
+.peana .bloque .pos{font-size:30px}
+.peana .bloque .pts{font-size:15px}
+.peana .nom{font-weight:800;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.peana .rata{width:46px;height:46px;margin:0 auto 4px}
+.p1 .bloque{height:120px;background:var(--queso)} .p2 .bloque{height:90px;background:#d8d2c2} .p3 .bloque{height:68px;background:var(--madera-2)} .p4 .bloque{height:48px;background:#9c8f78}
+.corona{font-size:28px;animation:flota 2.4s ease-in-out infinite;display:block}
+.tabla-wrap{overflow-x:auto;margin:0 -6px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:8px 6px;text-align:center;border-bottom:1px solid #eadfc7}
+th:first-child,td:first-child{text-align:left;font-weight:700;color:var(--tinta-2)}
+thead th{font-family:'Baloo 2';font-size:15px;color:var(--tinta)}
+tfoot td{font-family:'Baloo 2';font-size:22px;font-weight:800;color:var(--tinta);border:none;padding-top:12px}
+.desempate{font-size:13px;color:var(--tinta-2);text-align:center;margin-top:10px}
+
+/* ---------- HISTORIAL ---------- */
+.partida{display:flex;gap:12px;align-items:center}
+.partida .fecha{font-size:12px;color:var(--tinta-2);font-weight:700}
+.partida .gan{font-family:'Baloo 2';font-size:20px;font-weight:800}
+.partida .resto{font-size:13.5px;color:var(--tinta-2)}
+.vacio{color:var(--bata);opacity:.75;text-align:center;padding:40px 10px}
+
+/* ---------- MODAL / TOAST ---------- */
+.modal{position:fixed;inset:0;background:rgba(20,14,8,.6);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+.modal.activa{display:flex}
+.modal .tarjeta{max-width:440px;width:100%;max-height:85dvh;overflow:auto}
+.modal h3{font-size:24px;margin-bottom:8px}
+.modal ul{padding-left:0;list-style:none;line-height:1.55;font-size:14.5px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(120px);background:var(--tinta);color:var(--bata);padding:12px 18px;border-radius:14px;font-weight:700;transition:transform .3s;z-index:60;max-width:90vw;text-align:center}
+.toast.ver{transform:translateX(-50%) translateY(0)}
+@media (min-width:560px){.cabecera h2{font-size:32px}}
+</style>
+</head>
+<body>
+
+<!-- ============ SPLASH ============ -->
+<section id="splash" class="pantalla activa" aria-label="Pantalla de entrada">
+  <div class="fondo-splash"></div>
+  <div class="lienzo-splash">
+    <img src="splash.jpg" alt="Ratas de Wistar · Contador. Toca para empezar">
+    <div class="brillo-toca"></div>
+    <div class="huellas" id="huellas"></div>
+  </div>
+</section>
+
+<!-- ============ ACCESO (licencia) ============ -->
+<section id="acceso" class="pantalla">
+  <div class="cabecera"><h2>Acceso</h2></div>
+  <div class="tarjeta">
+    <div style="font-size:46px">🔑🧀</div>
+    <h3 style="font-size:24px;margin:6px 0">¿Tienes la clave?</h3>
+    <p class="ayuda">Introduce tu clave de licencia para desbloquear el contador sin límites.</p>
+    <input id="inClave" autocomplete="off" autocapitalize="characters" placeholder="TU CLAVE">
+    <div class="error" id="errClave"></div>
+    <div class="pila">
+      <button class="btn btn-queso" id="btnValidar">Desbloquear</button>
+      <button class="btn btn-madera" id="btnComprar">Comprar clave</button>
+      <button class="btn btn-linea" id="btnProbar">Probar gratis</button>
+    </div>
+    <p class="ayuda" id="txtPrueba" style="margin-top:12px"></p>
+  </div>
+  <div class="pie-legal" data-legal></div>
+</section>
+
+<!-- ============ MENÚ ============ -->
+<section id="menu" class="pantalla">
+  <div class="cabecera">
+    <span style="flex:1"></span>
+    <button class="icono-btn" id="btnSonido" aria-label="Sonido">🔊</button>
+  </div>
+  <div class="marca">
+    <img src="icono-app.png" alt="Ratas de Wistar · Contador">
+    <p>Recuento final de la colonia</p>
+  </div>
+  <div class="pila">
+    <div class="aviso-prueba oculto" id="avisoPrueba"></div>
+    <button class="btn btn-queso" id="btnNueva">🐀 Nueva partida</button>
+    <button class="btn btn-madera oculto" id="btnContinuar">⏯️ Continuar partida</button>
+    <button class="btn btn-claro" id="btnHistorial">📜 Historial</button>
+    <button class="btn btn-claro" id="btnAyuda">🧪 Cómo se puntúa</button>
+  </div>
+  <div class="pie-legal" data-legal></div>
+</section>
+
+<!-- ============ CONFIGURACIÓN ============ -->
+<section id="config" class="pantalla">
+  <div class="cabecera">
+    <button class="icono-btn" data-volver="menu" aria-label="Volver">←</button>
+    <h2>Nueva partida</h2>
+  </div>
+  <div class="tarjeta">
+    <p class="etiqueta">Número de familias</p>
+    <div class="selector-num" id="selNum">
+      <button data-n="1">1</button><button data-n="2">2</button><button data-n="3">3</button><button data-n="4">4</button>
+    </div>
+    <p class="ayuda" id="ayudaSolo"></p>
+  </div>
+  <div class="tarjeta">
+    <p class="etiqueta">Jugadores en orden de turno final</p>
+    <div id="listaJugadores"></div>
+    <p class="ayuda">Ordénalos según el orden de turno al acabar la 5.ª ronda (tras la Cabaña del Alquimista). Sirve para el desempate. Toca la ficha para cambiar el color.</p>
+  </div>
+  <div style="margin-top:16px">
+    <button class="btn btn-queso" id="btnEmpezar">¡A contar queso! 🧀</button>
+  </div>
+</section>
+
+<!-- ============ PUNTUACIÓN ============ -->
+<section id="puntuar" class="pantalla">
+  <div class="cabecera">
+    <button class="icono-btn" id="btnSalirPunt" aria-label="Menú">☰</button>
+    <h2>Recuento</h2>
+    <button class="icono-btn" id="btnTabla" aria-label="Ver resumen">📋</button>
+  </div>
+  <div class="marcador-vivo" id="marcador"></div>
+  <div class="progreso" id="progreso"></div>
+  <div class="tarjeta">
+    <div class="cat-cabeza">
+      <div class="cat-icono" id="catIcono"></div>
+      <div><div class="paso" id="catPaso"></div><h3 id="catNombre"></h3></div>
+    </div>
+    <p class="cat-desc" id="catDesc"></p>
+    <div id="catFilas"></div>
+  </div>
+  <div class="nav-cat">
+    <button class="btn btn-claro" id="btnAnt">← Atrás</button>
+    <button class="btn btn-queso" id="btnSig">Siguiente →</button>
+  </div>
+</section>
+
+<!-- ============ RESULTADOS ============ -->
+<section id="resultados" class="pantalla">
+  <div class="cabecera">
+    <button class="icono-btn" id="btnEditar" aria-label="Editar puntos">✏️</button>
+    <h2>¡Fin del reto!</h2>
+  </div>
+  <div class="podio" id="podio"></div>
+  <div class="tarjeta">
+    <div class="tabla-wrap"><table id="tablaRes"></table></div>
+    <p class="desempate" id="txtDesempate"></p>
+  </div>
+  <div class="pila" style="margin-top:16px">
+    <button class="btn btn-queso" id="btnGuardar">💾 Guardar y volver al menú</button>
+    <button class="btn btn-claro" id="btnRevancha">🔁 Revancha (mismos jugadores)</button>
+  </div>
+</section>
+
+<!-- ============ HISTORIAL ============ -->
+<section id="historial" class="pantalla">
+  <div class="cabecera">
+    <button class="icono-btn" data-volver="menu" aria-label="Volver">←</button>
+    <h2>Historial</h2>
+    <button class="icono-btn" id="btnBorrarHist" aria-label="Borrar historial">🗑️</button>
+  </div>
+  <div id="listaHist" class="pila"></div>
+</section>
+
+<!-- ============ MODALES ============ -->
+<div class="modal" id="modalAyuda">
+  <div class="tarjeta">
+    <h3>🧪 Puntuación final</h3>
+    <p class="ayuda">Al acabar la 5.ª ronda se suman a los PV del marcador:</p>
+    <ul>
+      <li><img class="mini" src="iconos/habilidades.png" alt="">PV de los espacios de <b>habilidad</b> de tu tablero de los que retiraste cubo (+2 si completas la pareja que lo indica).</li>
+      <li><img class="mini" src="iconos/camas.png" alt="">PV del espacio de <b>cama</b> de mayor valor que hayas descubierto.</li>
+      <li><img class="mini" src="iconos/habitaciones.png" alt="">PV de la <b>habitación</b> de mayor valor excavada (esté ocupada o no).</li>
+      <li><img class="mini" src="iconos/invitados.png" alt="">PV de los <b>ratones invitados</b> de tu tablero (incluido el queso, que vale 6).</li>
+      <li><img class="mini" src="iconos/inventos.png" alt="">PV impresos en tus <b>inventos</b> jugados.</li>
+      <li><img class="mini" src="iconos/finales.png" alt="">PV de los inventos con <b>efecto de final de partida</b>.</li>
+      <li><img class="mini" src="iconos/electricidad.png" alt=""><b>2 PV</b> si tienes la <b>electricidad avanzada</b>.</li>
+      <li><img class="mini" src="iconos/recursos.png" alt=""><b>1 PV por cada 5</b> elementos entre madera, metal, fichas de movimiento y cartas de invento en mano.</li>
+      <li><img class="mini" src="iconos/comodines.png" alt=""><b>1 PV por cada 2</b> fichas de comodín.</li>
+    </ul>
+    <p class="ayuda"><b>Desempate:</b> gana quien vaya antes en el orden de turno.</p>
+    <button class="btn btn-queso" data-cerrar>Entendido</button>
+  </div>
+</div>
+<div class="modal" id="modalConfirm">
+  <div class="tarjeta">
+    <h3 id="confTitulo"></h3>
+    <p class="ayuda" id="confTexto" style="font-size:15px;margin-bottom:16px"></p>
+    <div class="pila">
+      <button class="btn btn-queso" id="confSi">Sí</button>
+      <button class="btn btn-linea" data-cerrar>Cancelar</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================
+   CONFIGURACIÓN DE PENTECH
+   - Para activar la versión de pago: LICENCIA.activa = true,
+     pon la clave y el enlace de compra.
+   ===================================================== */
+const LICENCIA = {
+  activa: true,
+  clave: 'CAMBIAME',
+  urlCompra: 'https://buymeacoffee.com/pentech',
+  partidasPrueba: 3
+};
+const TEXTO_LEGAL = `Contador no oficial creado por <b>PenTech</b>. <i>Rats of Wistar</i> es un juego de Simone Luciani y Danilo Sabia, editado por Cranio Creations y en España por <b>Maldito Games</b>. Esta app no está afiliada ni respaldada por los editores ni por el Wistar Institute.`;
+
+/* ---------- Datos ---------- */
+const COLORES = [
+  {id:'rojo', hex:'#c4473a', nom:'Roja'},
+  {id:'azul', hex:'#3f6fa8', nom:'Azul'},
+  {id:'verde', hex:'#4f8a3c', nom:'Verde'},
+  {id:'amarillo', hex:'#d9a21b', nom:'Amarilla'},
+  {id:'morado', hex:'#7b4fa0', nom:'Morada'},
+  {id:'gris', hex:'#7d7469', nom:'Gris'}
+];
+// tipo: 'pv' = número directo; 'toggle' = sí/no; 'cuenta' = se cuenta y se divide
+const CATEGORIAS = [
+  {id:'marcador', ico:'🏁', nom:'PV del marcador', corto:'Marcador', tipo:'pv', max:200,
+   desc:'Los puntos de victoria que lleváis en el marcador del tablero tras la 5.ª ronda.'},
+  {id:'habilidades', ico:'🧠', nom:'Habilidades', corto:'Habilidades', tipo:'pv', max:60,
+   desc:'Suma los PV impresos en los espacios de habilidad de tu tablero de los que has retirado un cubo (los cubos que colocaste en las misiones). Ojo: si retiraste los dos cubos de la pareja que lo indica, suma 2 PV extra.'},
+  {id:'camas', ico:'🛏️', nom:'Camas', corto:'Camas', tipo:'pv', max:40,
+   desc:'PV del espacio de mayor valor de tu tablero del que hayas retirado una loseta de cama. Solo cuenta el más alto.'},
+  {id:'habitaciones', ico:'⛏️', nom:'Habitaciones', corto:'Habitaciones', tipo:'pv', max:40,
+   desc:'PV de la habitación de mayor valor de la que hayas retirado la loseta subterránea. Cuenta aunque la habitación esté vacía.'},
+  {id:'invitados', ico:'🐭', nom:'Ratones invitados', corto:'Invitados', tipo:'pv', max:60,
+   desc:'Suma los PV de las losetas de ratón invitado de tu tablero (de 0 a 3 cada una), incluida la loseta de queso si la tienes (vale 6 PV).'},
+  {id:'inventos', ico:'⚙️', nom:'Inventos', corto:'Inventos', tipo:'pv', max:80,
+   desc:'Suma los PV impresos en las cartas de invento que tienes jugadas en tu zona de juego.'},
+  {id:'finales', ico:'🎯', nom:'Inventos de final', corto:'Ef. final', tipo:'pv', max:80,
+   desc:'PV que te dan los inventos jugados con efecto de final de partida.'},
+  {id:'electricidad', ico:'⚡', nom:'Electricidad avanzada', corto:'Electricidad', tipo:'toggle', valor:2,
+   desc:'¿Tienes la ficha de electricidad avanzada? Vale 2 PV.'},
+  {id:'recursos', ico:'🪵', nom:'Recursos sobrantes', corto:'Recursos', tipo:'cuenta', div:5, max:99,
+   desc:'Cuenta tus maderas, metales, fichas de movimiento y cartas de invento en la mano, todo junto. Cada 5 elementos = 1 PV. ¡Yo hago la división!'},
+  {id:'comodines', ico:'🃏', nom:'Comodines', corto:'Comodines', tipo:'cuenta', div:2, max:30,
+   desc:'Cuenta tus fichas de comodín. Cada 2 comodines = 1 PV.'}
+];
+
+/* ---------- Estado ---------- */
+const LS = {partida:'rw_partida', hist:'rw_historial', sonido:'rw_sonido', lic:'rw_licencia', usadas:'rw_pruebas'};
+const ls = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v===null ? d : JSON.parse(v);}catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} },
+  del(k){ try{ localStorage.removeItem(k); }catch(e){} }
+};
+let partida = ls.get(LS.partida, null);
+let sonido = ls.get(LS.sonido, true);
+let modoPrueba = false;
+let configN = 2;
+let configJug = [];
+
+/* ---------- Utilidades ---------- */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function ir(id){ $$('.pantalla').forEach(p => p.classList.toggle('activa', p.id===id)); window.scrollTo(0,0); }
+function toast(t){ const el=$('#toast'); el.textContent=t; el.classList.add('ver'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('ver'),2200); }
+function confirmar(titulo, texto, si, txtSi='Sí'){
+  $('#confTitulo').textContent=titulo; $('#confTexto').textContent=texto; $('#confSi').textContent=txtSi;
+  $('#confSi').onclick=()=>{ cerrarModales(); si(); };
+  $('#modalConfirm').classList.add('activa');
+}
+function cerrarModales(){ $$('.modal').forEach(m=>m.classList.remove('activa')); }
+$$('[data-cerrar]').forEach(b=>b.onclick=cerrarModales);
+$$('.modal').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m) cerrarModales(); }));
+$$('[data-volver]').forEach(b=>b.onclick=()=>{ clic(); ir(b.dataset.volver); });
+$$('[data-legal]').forEach(el=>el.innerHTML=TEXTO_LEGAL);
+
+function ratSVG(color){
+  return `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 40c0-12 10-22 24-22 6 0 10 1 14 4l6-6c3 0 5 2 5 5l-4 5c2 3 3 6 3 9 0 4-3 7-7 7H18c-6 0-10-1-10-2z" fill="${color}"/><circle cx="44" cy="17" r="7" fill="${color}"/><circle cx="44" cy="17" r="3.5" fill="#f2a7a0"/><circle cx="50" cy="31" r="2.3" fill="#2b2118"/><path d="M8 40c-6 2-7 10 2 12" stroke="${color}" stroke-width="3.5" fill="none" stroke-linecap="round"/></svg>`;
+}
+
+/* ---------- Sonido (Web Audio, sin archivos) ---------- */
+let actx = null;
+function audio(){ if(!actx){ try{ actx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } if(actx && actx.state==='suspended') actx.resume(); return actx; }
+function nota(f, t0, dur, tipo='triangle', vol=.18){
+  const a=audio(); if(!a||!sonido) return;
+  const o=a.createOscillator(), g=a.createGain();
+  o.type=tipo; o.frequency.value=f;
+  g.gain.setValueAtTime(0.0001,a.currentTime+t0);
+  g.gain.exponentialRampToValueAtTime(vol,a.currentTime+t0+.015);
+  g.gain.exponentialRampToValueAtTime(0.0001,a.currentTime+t0+dur);
+  o.connect(g).connect(a.destination); o.start(a.currentTime+t0); o.stop(a.currentTime+t0+dur+.05);
+}
+function melodia(){
+  // Correteo de ratón: escala pentatónica saltarina + bajo de "laboratorio"
+  const N={C5:523.25,D5:587.33,E5:659.25,G5:783.99,A5:880,C6:1046.5,D6:1174.66,E6:1318.5,G4:392,C4:261.63,A4:440,F4:349.23};
+  const m=[['E5',0],['G5',.13],['A5',.26],['G5',.39],['E5',.52],['D5',.65],['E5',.78],['G5',.91],
+           ['C6',1.12],['A5',1.25],['G5',1.38],['E5',1.51],['G5',1.70],['A5',1.83],['C6',1.96],['D6',2.09],['E6',2.30]];
+  m.forEach(([n,t])=>nota(N[n],t,.16,'square',.07));
+  [['C4',0],['G4',.52],['A4',1.04],['F4',1.56],['G4',2.08],['C5',2.30]].forEach(([n,t])=>nota(N[n],t,.45,'triangle',.16));
+  nota(N.E6,2.30,.9,'sine',.09); nota(N.C6,2.30,.9,'sine',.07);
+}
+function clic(){ nota(1400,0,.05,'square',.04); }
+function chirrido(){ nota(1800,0,.06,'sine',.08); nota(2300,.06,.08,'sine',.07); }
+function fanfarria(){ [[523,0],[659,.12],[784,.24],[1047,.4],[784,.58],[1047,.7]].forEach(([f,t])=>nota(f,t,.25,'square',.08)); nota(262,.4,.8,'triangle',.18); }
+function pintaSonido(){ $('#btnSonido').textContent = sonido ? '🔊' : '🔇'; }
+$('#btnSonido').onclick=()=>{ sonido=!sonido; ls.set(LS.sonido,sonido); pintaSonido(); if(sonido) chirrido(); };
+
+/* ---------- Splash ---------- */
+(function huellas(){
+  const c=$('#huellas');
+  for(let i=0;i<14;i++){
+    const s=document.createElement('span');
+    const x=6+i*6.6;
+    s.style.left=x+'%'; s.style.top=(i%2? 62 : 22)+'%';
+    s.style.animationDelay=(i*.28)+'s';
+    c.appendChild(s);
+  }
+})();
+$('#splash').addEventListener('click', ()=>{
+  audio(); melodia();
+  $('#splash').style.pointerEvents='none';
+  setTimeout(()=>{ $('#splash').style.pointerEvents=''; entrar(); }, 500);
+});
+function entrar(){
+  if(LICENCIA.activa && !ls.get(LS.lic,false) && !modoPrueba){ prepararAcceso(); ir('acceso'); }
+  else { pintaMenu(); ir('menu'); }
+}
+
+/* ---------- Licencia ---------- */
+function pruebasRestantes(){ return Math.max(0, LICENCIA.partidasPrueba - ls.get(LS.usadas,0)); }
+function prepararAcceso(){
+  const r=pruebasRestantes();
+  $('#txtPrueba').textContent = r>0 ? `Puedes probar el contador gratis durante ${r} ${r===1?'partida':'partidas'}.` : 'Ya has agotado las partidas de prueba. ¡Hazte con la clave para seguir contando!';
+  $('#btnProbar').disabled = r<=0;
+  $('#errClave').textContent='';
+}
+$('#btnValidar').onclick=()=>{
+  const v=$('#inClave').value.trim().toUpperCase();
+  if(v && v===LICENCIA.clave.toUpperCase()){ ls.set(LS.lic,true); chirrido(); toast('¡Clave correcta! Contador desbloqueado 🧀'); pintaMenu(); ir('menu'); }
+  else { $('#errClave').textContent='Esa clave huele a queso caducado. Revísala.'; nota(200,0,.2,'square',.08); }
+};
+$('#btnComprar').onclick=()=>window.open(LICENCIA.urlCompra,'_blank','noopener');
+$('#btnProbar').onclick=()=>{ if(pruebasRestantes()>0){ modoPrueba=true; clic(); pintaMenu(); ir('menu'); } };
+function enPrueba(){ return LICENCIA.activa && !ls.get(LS.lic,false); }
+
+/* ---------- Menú ---------- */
+function pintaMenu(){
+  pintaSonido();
+  $('#btnContinuar').classList.toggle('oculto', !partida);
+  const av=$('#avisoPrueba');
+  if(enPrueba()){ const r=pruebasRestantes(); av.textContent=`Modo prueba: te quedan ${r} ${r===1?'partida':'partidas'}.`; av.classList.remove('oculto'); }
+  else av.classList.add('oculto');
+}
+$('#btnNueva').onclick=()=>{
+  clic();
+  const empezar=()=>{
+    if(enPrueba() && pruebasRestantes()<=0){ prepararAcceso(); ir('acceso'); return; }
+    abrirConfig();
+  };
+  if(partida) confirmar('¿Empezar de cero?','Hay una partida a medias. Si empiezas otra, se perderá.',empezar,'Nueva partida');
+  else empezar();
+};
+$('#btnContinuar').onclick=()=>{ clic(); if(partida.terminada) mostrarResultados(); else { ir('puntuar'); pintaCategoria(); } };
+$('#btnHistorial').onclick=()=>{ clic(); pintaHistorial(); ir('historial'); };
+$('#btnAyuda').onclick=()=>{ clic(); $('#modalAyuda').classList.add('activa'); };
+
+/* ---------- Configuración ---------- */
+function abrirConfig(previos){
+  const ultimos = previos || ls.get('rw_ultimos', null);
+  if(ultimos && ultimos.length){ configN=ultimos.length; configJug=ultimos.map(j=>({...j})); }
+  else { configN=2; configJug=[]; }
+  ajustarJugadores(); pintaConfig(); ir('config');
+}
+function ajustarJugadores(){
+  while(configJug.length<configN){
+    const usados=configJug.map(j=>j.color);
+    const libre=COLORES.find(c=>!usados.includes(c.id)) || COLORES[0];
+    configJug.push({nombre:'', color:libre.id});
+  }
+  configJug.length=configN;
+}
+function pintaConfig(){
+  $$('#selNum button').forEach(b=>b.classList.toggle('sel', +b.dataset.n===configN));
+  $('#ayudaSolo').textContent = configN===1 ? 'Modo solitario: anota tus puntos e intenta batir tu propio récord.' : '';
+  const L=$('#listaJugadores'); L.innerHTML='';
+  configJug.forEach((j,i)=>{
+    const col=COLORES.find(c=>c.id===j.color);
+    const fila=document.createElement('div'); fila.className='fila-jugador';
+    fila.innerHTML=`<div class="orden">${i+1}º</div>
+      <button class="ficha" style="background:${col.hex}22;border-color:${col.hex}" aria-label="Cambiar color">${ratSVG(col.hex)}</button>
+      <input maxlength="14" placeholder="Familia ${col.nom}" value="${esc(j.nombre)}">
+      <div class="flechas"><button aria-label="Subir">▲</button><button aria-label="Bajar">▼</button></div>`;
+    const [bCol]=fila.querySelectorAll('.ficha');
+    const inp=fila.querySelector('input');
+    const [up,down]=fila.querySelectorAll('.flechas button');
+    inp.oninput=()=>{ j.nombre=inp.value; };
+    bCol.onclick=()=>{
+      const usados=configJug.filter((_,k)=>k!==i).map(x=>x.color);
+      let idx=COLORES.findIndex(c=>c.id===j.color);
+      for(let n=0;n<COLORES.length;n++){ idx=(idx+1)%COLORES.length; if(!usados.includes(COLORES[idx].id)) break; }
+      j.color=COLORES[idx].id; clic(); pintaConfig();
+    };
+    up.onclick=()=>{ if(i>0){ [configJug[i-1],configJug[i]]=[configJug[i],configJug[i-1]]; clic(); pintaConfig(); } };
+    down.onclick=()=>{ if(i<configJug.length-1){ [configJug[i+1],configJug[i]]=[configJug[i],configJug[i+1]]; clic(); pintaConfig(); } };
+    L.appendChild(fila);
+  });
+}
+$$('#selNum button').forEach(b=>b.onclick=()=>{ configN=+b.dataset.n; clic(); ajustarJugadores(); pintaConfig(); });
+$('#btnEmpezar').onclick=()=>{
+  const jug=configJug.map((j,i)=>{
+    const col=COLORES.find(c=>c.id===j.color);
+    return {nombre:(j.nombre||'').trim() || `Familia ${col.nom}`, color:j.color, orden:i};
+  });
+  ls.set('rw_ultimos', jug.map(j=>({nombre:j.nombre, color:j.color})));
+  const v={}; CATEGORIAS.forEach(c=>v[c.id]=jug.map(()=> c.tipo==='toggle'?false:0));
+  partida={id:Date.now(), fecha:new Date().toISOString(), jugadores:jug, valores:v, paso:0, terminada:false, contadaPrueba:false};
+  if(enPrueba()){ ls.set(LS.usadas, ls.get(LS.usadas,0)+1); partida.contadaPrueba=true; }
+  guardar(); chirrido(); ir('puntuar'); pintaCategoria();
+};
+
+/* ---------- Cálculo ---------- */
+function pvCategoria(cat, i){
+  const v=partida.valores[cat.id][i];
+  if(cat.tipo==='toggle') return v ? cat.valor : 0;
+  if(cat.tipo==='cuenta') return Math.floor((+v||0)/cat.div);
+  return +v||0;
+}
+function total(i){ return CATEGORIAS.reduce((s,c)=>s+pvCategoria(c,i),0); }
+function guardar(){ ls.set(LS.partida, partida); }
+
+/* ---------- Pantalla de puntuación ---------- */
+function pintaMarcador(){
+  $('#marcador').innerHTML = partida.jugadores.map((j,i)=>{
+    const col=COLORES.find(c=>c.id===j.color).hex;
+    return `<div class="chip" style="--c:${col}"><div class="n">${esc(j.nombre)}</div><div class="t">${total(i)}</div></div>`;
+  }).join('');
+}
+function pintaProgreso(){
+  $('#progreso').innerHTML = CATEGORIAS.map((c,k)=>`<span class="${k<partida.paso?'hecho':''} ${k===partida.paso?'actual':''}" data-k="${k}" title="${c.nom}"></span>`).join('');
+  $$('#progreso span').forEach(s=>s.onclick=()=>{ partida.paso=+s.dataset.k; guardar(); clic(); pintaCategoria(); });
+}
+function pintaCategoria(){
+  const cat=CATEGORIAS[partida.paso];
+  $('#catIcono').innerHTML=`<img src="iconos/${cat.id}.png" alt="">`;
+  $('#catPaso').textContent=`Paso ${partida.paso+1} de ${CATEGORIAS.length}`;
+  $('#catNombre').textContent=cat.nom;
+  $('#catDesc').textContent=cat.desc;
+  const F=$('#catFilas'); F.innerHTML='';
+  partida.jugadores.forEach((j,i)=>{
+    const col=COLORES.find(c=>c.id===j.color).hex;
+    const fila=document.createElement('div'); fila.className='fila-punt';
+    const izq=`<div class="ficha" style="width:36px;height:36px;background:${col}22;border-color:${col}">${ratSVG(col)}</div>
+      <div class="nombre">${esc(j.nombre)}${cat.tipo==='cuenta'?`<div class="extra" data-extra>= ${pvCategoria(cat,i)} PV</div>`:''}</div>`;
+    if(cat.tipo==='toggle'){
+      fila.innerHTML=izq+`<button class="interruptor ${partida.valores[cat.id][i]?'on':''}" role="switch" aria-checked="${!!partida.valores[cat.id][i]}" aria-label="Electricidad avanzada"></button>`;
+      const sw=fila.querySelector('.interruptor');
+      sw.onclick=()=>{ partida.valores[cat.id][i]=!partida.valores[cat.id][i]; sw.classList.toggle('on'); sw.setAttribute('aria-checked',partida.valores[cat.id][i]); partida.valores[cat.id][i]?chirrido():clic(); guardar(); pintaMarcador(); };
+    } else {
+      fila.innerHTML=izq+`<div class="stepper"><button aria-label="Restar">−</button><input type="number" inputmode="numeric" min="0" max="${cat.max}" value="${partida.valores[cat.id][i]}" aria-label="${esc(cat.nom)} de ${esc(j.nombre)}"><button aria-label="Sumar">+</button></div>`;
+      const [menos,mas]=fila.querySelectorAll('.stepper button');
+      const inp=fila.querySelector('input');
+      const fijar=(n)=>{
+        n=Math.max(0,Math.min(cat.max, Math.round(+n||0)));
+        partida.valores[cat.id][i]=n; inp.value=n;
+        const ex=fila.querySelector('[data-extra]'); if(ex) ex.textContent=`= ${pvCategoria(cat,i)} PV`;
+        guardar(); pintaMarcador();
+      };
+      repetir(menos,()=>{ fijar(partida.valores[cat.id][i]-1); clic(); });
+      repetir(mas,()=>{ fijar(partida.valores[cat.id][i]+1); clic(); });
+      inp.onfocus=()=>inp.select();
+      inp.oninput=()=>{ if(inp.value!=='') fijar(inp.value); };
+      inp.onblur=()=>fijar(inp.value);
+    }
+    F.appendChild(fila);
+  });
+  $('#btnAnt').disabled = partida.paso===0;
+  $('#btnSig').textContent = partida.paso===CATEGORIAS.length-1 ? '🏆 Resultados' : 'Siguiente →';
+  pintaMarcador(); pintaProgreso();
+}
+// Mantener pulsado para sumar/restar rápido
+function repetir(btn, fn){
+  let t1, t2;
+  const parar=()=>{ clearTimeout(t1); clearInterval(t2); };
+  btn.addEventListener('pointerdown', e=>{ e.preventDefault(); fn(); t1=setTimeout(()=>{ t2=setInterval(fn,80); },420); });
+  ['pointerup','pointerleave','pointercancel'].forEach(ev=>btn.addEventListener(ev,parar));
+  btn.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); fn(); } });
+}
+$('#btnAnt').onclick=()=>{ if(partida.paso>0){ partida.paso--; guardar(); clic(); pintaCategoria(); } };
+$('#btnSig').onclick=()=>{
+  if(partida.paso<CATEGORIAS.length-1){ partida.paso++; guardar(); clic(); pintaCategoria(); }
+  else { partida.terminada=true; guardar(); mostrarResultados(); }
+};
+$('#btnSalirPunt').onclick=()=>{ clic(); pintaMenu(); ir('menu'); toast('Partida guardada. Puedes continuarla cuando quieras.'); };
+$('#btnTabla').onclick=()=>{ clic(); mostrarResultados(true); };
+
+/* ---------- Resultados ---------- */
+function clasificacion(){
+  return partida.jugadores.map((j,i)=>({...j, i, total:total(i)}))
+    .sort((a,b)=> b.total-a.total || a.orden-b.orden);
+}
+function mostrarResultados(soloVer){
+  const cl=clasificacion();
+  const orden=[1,0,2,3].filter(k=>k<cl.length); // podio: 2º,1º,3º,4º
+  $('#podio').innerHTML = orden.map(k=>{
+    const p=cl[k], col=COLORES.find(c=>c.id===p.color).hex;
+    return `<div class="peana p${k+1}">${k===0?'<span class="corona">👑</span>':''}<div class="rata">${ratSVG(col)}</div><div class="nom">${esc(p.nombre)}</div><div class="bloque"><div class="pos">${k+1}º</div><div class="pts">${p.total} PV</div></div></div>`;
+  }).join('');
+  const J=partida.jugadores;
+  let h=`<thead><tr><th></th>${J.map(j=>`<th style="color:${COLORES.find(c=>c.id===j.color).hex}">${esc(j.nombre)}</th>`).join('')}</tr></thead><tbody>`;
+  CATEGORIAS.forEach(c=>{
+    h+=`<tr><td><img class="mini" src="iconos/${c.id}.png" alt="">${c.corto}</td>${J.map((_,i)=>{
+      const pv=pvCategoria(c,i);
+      const det = c.tipo==='cuenta' ? ` <span style="font-size:11px;color:var(--tinta-2)">(${partida.valores[c.id][i]})</span>` : '';
+      return `<td>${pv}${det}</td>`;
+    }).join('')}</tr>`;
+  });
+  h+=`</tbody><tfoot><tr><td>Total</td>${J.map((_,i)=>`<td>${total(i)}</td>`).join('')}</tr></tfoot>`;
+  $('#tablaRes').innerHTML=h;
+  // aviso de desempate
+  const emp = cl.length>1 && cl[0].total===cl[1].total;
+  $('#txtDesempate').textContent = emp ? `Empate a ${cl[0].total} PV: gana ${cl[0].nombre} por ir antes en el orden de turno.` : (cl.length>1 ? `${cl[0].nombre} gana por ${cl[0].total-cl[1].total} PV de ventaja.` : '');
+  $('#btnGuardar').textContent = soloVer && !partida.terminada ? '✏️ Seguir contando' : '💾 Guardar y volver al menú';
+  $('#btnRevancha').classList.toggle('oculto', soloVer && !partida.terminada);
+  $('#btnGuardar').onclick = soloVer && !partida.terminada ? ()=>{ clic(); ir('puntuar'); } : guardarPartida;
+  ir('resultados');
+  if(!soloVer || partida.terminada) fanfarria();
+}
+$('#btnEditar').onclick=()=>{ clic(); partida.terminada=false; partida.paso=0; guardar(); ir('puntuar'); pintaCategoria(); };
+function guardarPartida(){
+  const hist=ls.get(LS.hist,[]);
+  const cl=clasificacion();
+  const reg={id:partida.id, fecha:partida.fecha, ranking:cl.map(p=>({nombre:p.nombre,color:p.color,total:p.total}))};
+  const k=hist.findIndex(x=>x.id===reg.id);
+  if(k>=0) hist[k]=reg; else hist.unshift(reg);
+  ls.set(LS.hist, hist.slice(0,100));
+  const jug=partida.jugadores;
+  partida=null; ls.del(LS.partida);
+  toast('Partida guardada en el historial 📜');
+  pintaMenu(); ir('menu');
+  return jug;
+}
+$('#btnRevancha').onclick=()=>{
+  const jug=partida.jugadores.map(j=>({nombre:j.nombre,color:j.color}));
+  guardarPartida();
+  if(enPrueba() && pruebasRestantes()<=0){ prepararAcceso(); ir('acceso'); return; }
+  abrirConfig(jug);
+};
+
+/* ---------- Historial ---------- */
+function pintaHistorial(){
+  const hist=ls.get(LS.hist,[]); const L=$('#listaHist');
+  if(!hist.length){ L.innerHTML='<div class="vacio">🐀💤<br>Aún no hay partidas guardadas.<br>¡La colonia espera!</div>'; return; }
+  L.innerHTML = hist.map(p=>{
+    const g=p.ranking[0], col=COLORES.find(c=>c.id===g.color)?.hex||'#999';
+    const f=new Date(p.fecha).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'});
+    return `<div class="tarjeta partida"><div class="ficha" style="background:${col}22;border-color:${col}">${ratSVG(col)}</div>
+      <div style="flex:1;min-width:0"><div class="fecha">${f}</div><div class="gan">👑 ${esc(g.nombre)} · ${g.total} PV</div>
+      <div class="resto">${p.ranking.slice(1).map(r=>`${esc(r.nombre)} ${r.total}`).join(' · ')}</div></div></div>`;
+  }).join('');
+}
+$('#btnBorrarHist').onclick=()=>{
+  if(!ls.get(LS.hist,[]).length) return;
+  confirmar('¿Borrar historial?','Se eliminarán todas las partidas guardadas. No hay vuelta atrás (ni con la poción del Alquimista).',()=>{ ls.del(LS.hist); pintaHistorial(); toast('Historial borrado'); },'Borrar');
+};
+
+/* ---------- PWA ---------- */
+if('serviceWorker' in navigator){ window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{})); }
+</script>
+</body>
+</html>
