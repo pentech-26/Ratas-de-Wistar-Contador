@@ -68,6 +68,10 @@ button{font:inherit;cursor:pointer;border:none}
 .cabecera h2{font-size:28px;color:var(--queso);flex:1}
 .icono-btn{width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.12);color:var(--bata);display:grid;place-items:center;font-size:20px}
 .icono-btn:active{transform:scale(.94)}
+.ico-cab{width:30px;height:30px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+.ico-grande{width:58px;height:58px}
+.duo-acceso{display:flex;justify-content:center;gap:4px}
+.ico-mini{width:22px;height:22px;vertical-align:-3px;margin-right:6px}
 #btnSonido img{width:30px;height:30px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
 .tarjeta{background:var(--bata);border-radius:var(--r);padding:18px;box-shadow:var(--sombra);position:relative}
 .tarjeta + .tarjeta{margin-top:14px}
@@ -155,7 +159,7 @@ img.mini{width:26px;height:26px;vertical-align:middle;margin-right:4px;object-fi
 .peana .nom{font-weight:800;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .peana .rata{width:46px;height:46px;margin:0 auto 4px}
 .p1 .bloque{height:120px;background:var(--queso)} .p2 .bloque{height:90px;background:#d8d2c2} .p3 .bloque{height:68px;background:var(--madera-2)} .p4 .bloque{height:48px;background:#9c8f78}
-.corona{font-size:28px;animation:flota 2.4s ease-in-out infinite;display:block}
+.corona{width:40px;height:40px;animation:flota 2.4s ease-in-out infinite;display:block;margin:0 auto 2px;filter:drop-shadow(0 3px 4px rgba(0,0,0,.3))}
 .tabla-wrap{overflow-x:auto;margin:0 -6px}
 table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{padding:8px 6px;text-align:center;border-bottom:1px solid #eadfc7}
@@ -197,7 +201,7 @@ tfoot td{font-family:'Baloo 2';font-size:22px;font-weight:800;color:var(--tinta)
 <section id="acceso" class="pantalla">
   <div class="cabecera"><h2>Acceso</h2></div>
   <div class="tarjeta">
-    <div style="font-size:46px">🔑🧀</div>
+    <div class="duo-acceso"><img class="ico-grande" src="iconos/menu/llave.svg" alt=""><img class="ico-grande" src="iconos/menu/nueva.svg" alt=""></div>
     <h3 style="font-size:24px;margin:6px 0">¿Tienes la clave?</h3>
     <p class="ayuda">Introduce tu clave de licencia para desbloquear el contador sin límites.</p>
     <input id="inClave" autocomplete="off" autocapitalize="characters" placeholder="TU CLAVE">
@@ -235,7 +239,7 @@ tfoot td{font-family:'Baloo 2';font-size:22px;font-weight:800;color:var(--tinta)
 <!-- ============ CONFIGURACIÓN ============ -->
 <section id="config" class="pantalla">
   <div class="cabecera">
-    <button class="icono-btn" data-volver="menu" aria-label="Volver">←</button>
+    <button class="icono-btn" data-volver="menu" aria-label="Volver"><img class="ico-cab" src="iconos/menu/volver.svg" alt=""></button>
     <h2>Nueva partida</h2>
   </div>
   <div class="tarjeta">
@@ -251,16 +255,16 @@ tfoot td{font-family:'Baloo 2';font-size:22px;font-weight:800;color:var(--tinta)
     <p class="ayuda">Ordénalos según el orden de turno al acabar la 5.ª ronda (tras la Cabaña del Alquimista). Sirve para el desempate. Toca la ficha para cambiar el color.</p>
   </div>
   <div style="margin-top:16px">
-    <button class="btn btn-queso" id="btnEmpezar">¡A contar queso! 🧀</button>
+    <button class="btn btn-queso" id="btnEmpezar"><img class="ico-btn" src="iconos/menu/nueva.svg" alt="">¡A contar queso!</button>
   </div>
 </section>
 
 <!-- ============ PUNTUACIÓN ============ -->
 <section id="puntuar" class="pantalla">
   <div class="cabecera">
-    <button class="icono-btn" id="btnSalirPunt" aria-label="Menú">☰</button>
+    <button class="icono-btn" id="btnSalirPunt" aria-label="Menú"><img class="ico-cab" src="iconos/menu/madriguera.svg" alt=""></button>
     <h2>Recuento</h2>
-    <button class="icono-btn" id="btnTabla" aria-label="Ver resumen">📋</button>
+    <button class="icono-btn" id="btnTabla" aria-label="Ver resumen"><img class="ico-cab" src="iconos/menu/resumen.svg" alt=""></button>
   </div>
   <div class="marcador-vivo" id="marcador"></div>
   <div class="progreso" id="progreso"></div>
@@ -281,7 +285,7 @@ tfoot td{font-family:'Baloo 2';font-size:22px;font-weight:800;color:var(--tinta)
 <!-- ============ RESULTADOS ============ -->
 <section id="resultados" class="pantalla">
   <div class="cabecera">
-    <button class="icono-btn" id="btnEditar" aria-label="Editar puntos">✏️</button>
+    <button class="icono-btn" id="btnEditar" aria-label="Editar puntos"><img class="ico-cab" src="iconos/menu/editar.svg" alt=""></button>
     <h2>¡Fin del reto!</h2>
   </div>
   <div class="podio" id="podio"></div>
@@ -290,17 +294,17 @@ tfoot td{font-family:'Baloo 2';font-size:22px;font-weight:800;color:var(--tinta)
     <p class="desempate" id="txtDesempate"></p>
   </div>
   <div class="pila" style="margin-top:16px">
-    <button class="btn btn-queso" id="btnGuardar">💾 Guardar y volver al menú</button>
-    <button class="btn btn-claro" id="btnRevancha">🔁 Revancha (mismos jugadores)</button>
+    <button class="btn btn-queso" id="btnGuardar"><img class="ico-btn" src="iconos/menu/guardar.svg" alt="">Guardar y volver al menú</button>
+    <button class="btn btn-claro" id="btnRevancha"><img class="ico-btn" src="iconos/menu/revancha.svg" alt="">Revancha (mismos jugadores)</button>
   </div>
 </section>
 
 <!-- ============ HISTORIAL ============ -->
 <section id="historial" class="pantalla">
   <div class="cabecera">
-    <button class="icono-btn" data-volver="menu" aria-label="Volver">←</button>
+    <button class="icono-btn" data-volver="menu" aria-label="Volver"><img class="ico-cab" src="iconos/menu/volver.svg" alt=""></button>
     <h2>Historial</h2>
-    <button class="icono-btn" id="btnBorrarHist" aria-label="Borrar historial">🗑️</button>
+    <button class="icono-btn" id="btnBorrarHist" aria-label="Borrar historial"><img class="ico-cab" src="iconos/menu/borrar.svg" alt=""></button>
   </div>
   <div id="listaHist" class="pila"></div>
 </section>
@@ -643,7 +647,7 @@ function mostrarResultados(soloVer){
   const orden=[1,0,2,3].filter(k=>k<cl.length); // podio: 2º,1º,3º,4º
   $('#podio').innerHTML = orden.map(k=>{
     const p=cl[k], col=COLORES.find(c=>c.id===p.color).hex;
-    return `<div class="peana p${k+1}">${k===0?'<span class="corona">👑</span>':''}<div class="rata">${ratSVG(col)}</div><div class="nom">${esc(p.nombre)}</div><div class="bloque"><div class="pos">${k+1}º</div><div class="pts">${p.total} PV</div></div></div>`;
+    return `<div class="peana p${k+1}">${k===0?'<img class="corona" src="iconos/menu/corona.svg" alt="Ganador">':''}<div class="rata">${ratSVG(col)}</div><div class="nom">${esc(p.nombre)}</div><div class="bloque"><div class="pos">${k+1}º</div><div class="pts">${p.total} PV</div></div></div>`;
   }).join('');
   const J=partida.jugadores;
   let h=`<thead><tr><th></th>${J.map(j=>`<th style="color:${COLORES.find(c=>c.id===j.color).hex}">${esc(j.nombre)}</th>`).join('')}</tr></thead><tbody>`;
@@ -659,7 +663,7 @@ function mostrarResultados(soloVer){
   // aviso de desempate
   const emp = cl.length>1 && cl[0].total===cl[1].total;
   $('#txtDesempate').textContent = emp ? `Empate a ${cl[0].total} PV: gana ${cl[0].nombre} por ir antes en el orden de turno.` : (cl.length>1 ? `${cl[0].nombre} gana por ${cl[0].total-cl[1].total} PV de ventaja.` : '');
-  $('#btnGuardar').textContent = soloVer && !partida.terminada ? '✏️ Seguir contando' : '💾 Guardar y volver al menú';
+  $('#btnGuardar').innerHTML = soloVer && !partida.terminada ? '<img class="ico-btn" src="iconos/menu/editar.svg" alt="">Seguir contando' : '<img class="ico-btn" src="iconos/menu/guardar.svg" alt="">Guardar y volver al menú';
   $('#btnRevancha').classList.toggle('oculto', soloVer && !partida.terminada);
   $('#btnGuardar').onclick = soloVer && !partida.terminada ? ()=>{ clic(); ir('puntuar'); } : guardarPartida;
   ir('resultados');
@@ -694,7 +698,7 @@ function pintaHistorial(){
     const g=p.ranking[0], col=COLORES.find(c=>c.id===g.color)?.hex||'#999';
     const f=new Date(p.fecha).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'});
     return `<div class="tarjeta partida"><div class="ficha" style="background:${col}22;border-color:${col}">${ratSVG(col)}</div>
-      <div style="flex:1;min-width:0"><div class="fecha">${f}</div><div class="gan">👑 ${esc(g.nombre)} · ${g.total} PV</div>
+      <div style="flex:1;min-width:0"><div class="fecha">${f}</div><div class="gan"><img class="ico-mini" src="iconos/menu/corona.svg" alt="">${esc(g.nombre)} · ${g.total} PV</div>
       <div class="resto">${p.ranking.slice(1).map(r=>`${esc(r.nombre)} ${r.total}`).join(' · ')}</div></div></div>`;
   }).join('');
 }
