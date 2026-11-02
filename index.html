@@ -68,6 +68,7 @@ button{font:inherit;cursor:pointer;border:none}
 .cabecera h2{font-size:28px;color:var(--queso);flex:1}
 .icono-btn{width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.12);color:var(--bata);display:grid;place-items:center;font-size:20px}
 .icono-btn:active{transform:scale(.94)}
+#btnSonido img{width:30px;height:30px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
 .tarjeta{background:var(--bata);border-radius:var(--r);padding:18px;box-shadow:var(--sombra);position:relative}
 .tarjeta + .tarjeta{margin-top:14px}
 .btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px 18px;border-radius:16px;font-family:'Baloo 2';font-size:21px;font-weight:800;transition:transform .08s}
@@ -87,7 +88,7 @@ button{font:inherit;cursor:pointer;border:none}
 #menu .marca{display:flex;flex-direction:column;align-items:center;gap:6px;margin:10px 0 26px;color:var(--bata)}
 #menu .marca img{width:min(52vw,210px);border-radius:22%;box-shadow:0 10px 24px rgba(0,0,0,.35),0 0 0 4px rgba(244,196,48,.35);margin-bottom:6px}
 #menu .marca h1{font-size:40px;color:var(--queso);text-shadow:0 2px 0 var(--madera)}
-#menu .marca p{margin:0;opacity:.8;font-weight:600}
+#menu .marca p{margin:4px 0 0;font-family:"Baloo 2",cursive;font-size:22px;font-weight:800;color:var(--bata);letter-spacing:.3px;text-shadow:0 2px 6px rgba(0,0,0,.35)}
 .aviso-prueba{background:rgba(244,196,48,.15);border:1px solid rgba(244,196,48,.5);color:var(--queso-2);padding:10px 14px;border-radius:12px;text-align:center;font-weight:700;font-size:14px}
 
 /* ---------- ACCESO / LICENCIA ---------- */
@@ -215,7 +216,7 @@ tfoot td{font-family:'Baloo 2';font-size:22px;font-weight:800;color:var(--tinta)
 <section id="menu" class="pantalla">
   <div class="cabecera">
     <span style="flex:1"></span>
-    <button class="icono-btn" id="btnSonido" aria-label="Sonido">🔊</button>
+    <button class="icono-btn" id="btnSonido" aria-label="Sonido"><img src="iconos/menu/sonido-on.svg" alt=""></button>
   </div>
   <div class="marca">
     <img src="icono-app.png" alt="Ratas de Wistar · Contador">
@@ -441,7 +442,7 @@ function melodia(){
 function clic(){ nota(1400,0,.05,'square',.04); }
 function chirrido(){ nota(1800,0,.06,'sine',.08); nota(2300,.06,.08,'sine',.07); }
 function fanfarria(){ [[523,0],[659,.12],[784,.24],[1047,.4],[784,.58],[1047,.7]].forEach(([f,t])=>nota(f,t,.25,'square',.08)); nota(262,.4,.8,'triangle',.18); }
-function pintaSonido(){ $('#btnSonido').textContent = sonido ? '🔊' : '🔇'; }
+function pintaSonido(){ const b=$('#btnSonido'); b.innerHTML=`<img src="iconos/menu/sonido-${sonido?'on':'off'}.svg" alt="">`; b.setAttribute('aria-label', sonido?'Silenciar':'Activar sonido'); }
 $('#btnSonido').onclick=()=>{ sonido=!sonido; ls.set(LS.sonido,sonido); pintaSonido(); if(sonido) chirrido(); };
 
 /* ---------- Splash ---------- */

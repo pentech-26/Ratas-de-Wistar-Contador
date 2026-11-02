@@ -1,6 +1,6 @@
-const CACHE = 'ratas-wistar-v8';
+const CACHE = 'ratas-wistar-v10';
 const ICONOS = ['marcador','habilidades','camas','habitaciones','invitados','inventos','finales','electricidad','recursos','comodines'].map(n => `./iconos/${n}.png`);
-const ARCHIVOS = ['./', './index.html', './splash.jpg', './icono-app.png', './splash-alto.jpg', './iconos/menu/nueva.svg', './iconos/menu/continuar.svg', './iconos/menu/historial.svg', './iconos/menu/ayuda.svg', './manifest.json', './icon-192.png', './icon-512.png', './apple-touch-icon.png', ...ICONOS];
+const ARCHIVOS = ['./', './index.html', './splash.jpg', './icono-app.png', './splash-alto.jpg', './iconos/menu/nueva.svg', './iconos/menu/continuar.svg', './iconos/menu/historial.svg', './iconos/menu/ayuda.svg', './iconos/menu/sonido-on.svg', './iconos/menu/sonido-off.svg', './manifest.json', './icon-192.png', './icon-512.png', './apple-touch-icon.png', ...ICONOS];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ARCHIVOS)).then(() => self.skipWaiting()));
