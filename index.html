@@ -226,6 +226,18 @@ img.avatar{display:block;width:100%;height:100%;object-fit:contain;filter:drop-s
 #victoria .medallon img.avatar{width:100%;height:100%;animation:menea 1.4s ease-in-out .8s infinite;transform-origin:50% 85%;filter:none}
 #victoria .vic-corona{z-index:2;top:-58px}
 
+/* ---------- SOLO VERTICAL: aviso al girar el móvil ---------- */
+#girar{position:fixed;inset:0;z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px;background:radial-gradient(circle at 50% 40%, #4c7343 0%, #2a4226 65%, #1d2f1a 100%);color:var(--bata)}
+#girar .gi-movil{width:120px;height:120px;animation:giraMovil 2.4s ease-in-out infinite}
+#girar .gi-rata{width:62px;height:62px;margin-top:-10px}
+#girar h2{font-size:28px;color:var(--queso);text-shadow:0 2px 0 #8a5a34,0 4px 0 #3a2414}
+#girar p{margin:0;font-weight:700;opacity:.85;font-size:15px}
+@keyframes giraMovil{0%,20%{transform:rotate(-90deg)}45%,80%{transform:rotate(0)}100%{transform:rotate(-90deg)}}
+/* Solo en móviles (pantalla baja en horizontal); tablets y ordenadores quedan libres */
+@media (orientation: landscape) and (max-height: 520px){
+  #girar{display:flex}
+  body{overflow:hidden}
+}
 /* ---------- FICHA DE PERSONAJE (zoom al tocar una rata) ---------- */
 img.avatar[data-fam]{cursor:zoom-in;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 #victoria img.avatar{cursor:inherit}
@@ -403,6 +415,20 @@ img.avatar[data-fam]{cursor:zoom-in;-webkit-touch-callout:none;-webkit-user-sele
   </div>
   <div id="listaHist" class="pila"></div>
 </section>
+
+<!-- ============ AVISO: PON EL MÓVIL EN VERTICAL ============ -->
+<div id="girar" role="alert" aria-live="assertive">
+  <svg class="gi-movil" viewBox="0 0 64 64" aria-hidden="true">
+    <rect x="18" y="4" width="28" height="56" rx="6" fill="#f3ead3" stroke="#3a2414" stroke-width="3.2"/>
+    <rect x="22" y="11" width="20" height="40" rx="2" fill="#6f8f4e" stroke="#3a2414" stroke-width="2"/>
+    <circle cx="32" cy="55.5" r="2" fill="#3a2414"/>
+    <path d="M24 42 L40 42 L40 33 Z" fill="#d99a1e" stroke="#3a2414" stroke-width="1.6" stroke-linejoin="round"/>
+    <path d="M24 42 L40 33 L36 29 L24 36 Z" fill="#ffd34d" stroke="#3a2414" stroke-width="1.6" stroke-linejoin="round"/>
+  </svg>
+  <img class="gi-rata" src="iconos/familias/mini/rojo.webp" alt="">
+  <h2>¡Ponme de pie!</h2>
+  <p>Este contador funciona solo en vertical.<br>Gira el móvil para seguir contando queso.</p>
+</div>
 
 <!-- ============ FICHA DE PERSONAJE ============ -->
 <div id="zoomRata" role="dialog" aria-modal="true" aria-label="Personaje">
@@ -1009,6 +1035,7 @@ $('#btnBorrarHist').onclick=()=>{
 };
 
 /* ---------- PWA ---------- */
+try{ if(screen.orientation && screen.orientation.lock && matchMedia('(display-mode: standalone)').matches) screen.orientation.lock('portrait').catch(()=>{}); }catch(e){}
 if('serviceWorker' in navigator){
   const habiaControl = !!navigator.serviceWorker.controller;
   let recargado=false;
