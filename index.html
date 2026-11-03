@@ -107,9 +107,18 @@ html:has(#splash.activa), body:has(#splash.activa){background:#44261b}
 .error{color:var(--rojo);font-weight:800;min-height:22px}
 
 /* ---------- CONFIGURACIÓN ---------- */
-.selector-num{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.selector-num button{padding:14px 0;border-radius:14px;background:var(--papel);font-family:'Baloo 2';font-size:26px;font-weight:800;color:var(--tinta-2)}
-.selector-num button.sel{background:var(--queso);color:var(--tinta);box-shadow:inset 0 -4px 0 #b8901a}
+.selector-fam{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.selector-fam button{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 2px 8px;border-radius:16px;background:var(--papel);border:2px dashed #d8c9a8;transition:transform .12s, background .2s}
+.selector-fam button:active{transform:scale(.94)}
+.selector-fam .sf-rata{width:min(64px,15vw);aspect-ratio:1;filter:grayscale(1) brightness(1.05);opacity:.45;transition:filter .25s, opacity .25s, transform .25s}
+.selector-fam .sf-rata img{display:block;width:100%;height:100%;object-fit:contain}
+.selector-fam .sf-nom{font-weight:800;font-size:12.5px;color:#b3a283;transition:color .2s}
+.selector-fam button.on{background:#fff8e1;border:2px solid var(--c);box-shadow:0 4px 0 var(--c)}
+.selector-fam button.on .sf-rata{filter:drop-shadow(0 3px 4px rgba(40,25,10,.25));opacity:1;transform:scale(1.06)}
+.selector-fam button.on .sf-nom{color:var(--tinta)}
+.selector-fam .sf-ok{position:absolute;top:-7px;right:-5px;width:24px;height:24px;border-radius:50%;background:var(--verde);border:2.5px solid #3a2414;display:grid;place-items:center;transform:scale(0);transition:transform .2s cubic-bezier(.3,1.6,.5,1)}
+.selector-fam button.on .sf-ok{transform:scale(1)}
+.selector-fam .sf-ok svg{width:13px;height:13px}
 .etiqueta{font-weight:800;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--tinta-2);margin:0 0 10px}
 .fila-jugador{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .fila-jugador input{flex:1;min-width:0;padding:13px 14px;border-radius:12px;border:2px solid #e2d6bd;font:inherit;font-size:17px;font-weight:700;background:#fff}
@@ -332,11 +341,9 @@ img.avatar[data-fam]{cursor:zoom-in;-webkit-touch-callout:none;-webkit-user-sele
     <h2>Nueva partida</h2>
   </div>
   <div class="tarjeta">
-    <p class="etiqueta">Número de familias</p>
-    <div class="selector-num" id="selNum">
-      <button data-n="1">1</button><button data-n="2">2</button><button data-n="3">3</button><button data-n="4">4</button>
-    </div>
-    <p class="ayuda" id="ayudaSolo"></p>
+    <p class="etiqueta">¿Qué familias juegan?</p>
+    <div class="selector-fam" id="selFam"></div>
+    <p class="ayuda" id="ayudaSolo" style="margin-top:12px"></p>
   </div>
   <div class="tarjeta">
     <p class="etiqueta">Jugadores en orden de turno final</p>
@@ -525,6 +532,7 @@ let partida = ls.get(LS.partida, null);
 let sonido = ls.get(LS.sonido, true);
 let modoPrueba = false;
 let configN = 2;
+let nombresMemo = {};   // nombre escrito para cada familia, por si se quita y se vuelve a poner
 let configJug = [];
 let filaMovida = -1;
 
@@ -681,20 +689,37 @@ function abrirConfig(previos){
     configJug.forEach((j,k)=>{ if(!COLORES.some(c=>c.id===j.color) || configJug.slice(0,k).some(x=>x.color===j.color)){
       const libre=COLORES.find(c=>!configJug.some(x=>x!==j && x.color===c.id)); j.color=libre?libre.id:'rojo'; } });
   }
-  else { configN=2; configJug=[]; }
-  ajustarJugadores(); pintaConfig(); ir('config');
+  else { configJug=[{nombre:'',color:'azul'},{nombre:'',color:'rojo'}]; }
+  configN=configJug.length; nombresMemo={};
+  configJug.forEach(j=>{ if(j.nombre) nombresMemo[j.color]=j.nombre; });
+  pintaConfig(); ir('config');
 }
-function ajustarJugadores(){
-  while(configJug.length<configN){
-    const usados=configJug.map(j=>j.color);
-    const libre=COLORES.find(c=>!usados.includes(c.id)) || COLORES[0];
-    configJug.push({nombre:'', color:libre.id});
+function alternarFamilia(id){
+  const k=configJug.findIndex(j=>j.color===id);
+  if(k>=0){
+    if(configJug.length===1){ toast('Tiene que jugar al menos una familia 🐀'); return; }
+    if(configJug[k].nombre) nombresMemo[id]=configJug[k].nombre;
+    configJug.splice(k,1);
+  } else {
+    configJug.push({nombre: nombresMemo[id]||'', color:id});
+    filaMovida=configJug.length-1;
   }
-  configJug.length=configN;
+  configN=configJug.length; clic(); pintaConfig();
+}
+function pintaSelectorFam(){
+  const tick='<svg viewBox="0 0 24 24"><path d="M5 12.5 L10 17 L19 7" fill="none" stroke="#fbf6ea" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  $('#selFam').innerHTML = COLORES.map(c=>{
+    const on = configJug.some(j=>j.color===c.id);
+    return `<button class="${on?'on':''}" style="--c:${c.hex==='#efe6d2'?'#bfae8a':c.hex}" data-fam="${c.id}" aria-pressed="${on}" aria-label="Familia ${c.nom}">
+      <span class="sf-ok">${tick}</span>
+      <span class="sf-rata"><img src="iconos/familias/mini/${c.id}.webp" alt="" draggable="false"></span>
+      <span class="sf-nom">${c.nom}</span></button>`;
+  }).join('');
+  $$('#selFam button').forEach(b=>b.onclick=()=>alternarFamilia(b.dataset.fam));
 }
 function pintaConfig(){
-  $$('#selNum button').forEach(b=>b.classList.toggle('sel', +b.dataset.n===configN));
-  $('#ayudaSolo').textContent = configN===1 ? 'Modo solitario: anota tus puntos e intenta batir tu propio récord.' : '';
+  pintaSelectorFam();
+  $('#ayudaSolo').textContent = configN===1 ? 'Modo solitario: anota tus puntos e intenta batir tu propio récord.' : `Toca las familias para añadirlas o quitarlas · ${configN} jugadores`;
   const L=$('#listaJugadores'); L.innerHTML='';
   configJug.forEach((j,i)=>{
     const col=COLORES.find(c=>c.id===j.color);
@@ -707,7 +732,7 @@ function pintaConfig(){
     const inp=fila.querySelector('input');
     const [up,down]=fila.querySelectorAll('.flechas button');
     const imAv=fila.querySelector('img.avatar');
-    inp.oninput=()=>{ j.nombre=inp.value; if(imAv) imAv.dataset.nom=inp.value; };
+    inp.oninput=()=>{ j.nombre=inp.value; nombresMemo[j.color]=inp.value; if(imAv) imAv.dataset.nom=inp.value; };
     if(up){
     up.onclick=()=>{ if(i>0){ [configJug[i-1],configJug[i]]=[configJug[i],configJug[i-1]]; filaMovida=i-1; clic(); pintaConfig(); } };
     down.onclick=()=>{ if(i<configJug.length-1){ [configJug[i+1],configJug[i]]=[configJug[i],configJug[i+1]]; filaMovida=i+1; clic(); pintaConfig(); } };
@@ -716,7 +741,6 @@ function pintaConfig(){
   });
   filaMovida=-1;
 }
-$$('#selNum button').forEach(b=>b.onclick=()=>{ configN=+b.dataset.n; clic(); ajustarJugadores(); pintaConfig(); });
 $('#btnEmpezar').onclick=()=>{
   const jug=configJug.map((j,i)=>{
     const col=COLORES.find(c=>c.id===j.color);
