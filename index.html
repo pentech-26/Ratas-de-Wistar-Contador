@@ -707,7 +707,8 @@ $('#btnAyuda').onclick=()=>{ clic(); $('#modalAyuda').classList.add('activa'); }
 
 /* ---------- Configuración ---------- */
 function abrirConfig(previos){
-  const ultimos = previos || ls.get('rw_ultimos', null);
+  // Nueva partida = todo limpio; solo la revancha trae los mismos jugadores
+  const ultimos = previos || null;
   if(ultimos && ultimos.length){
     configN=Math.min(4,ultimos.length); configJug=ultimos.slice(0,4).map(j=>({...j}));
     // familias que ya no existen (morada/gris) → se reasignan a una libre
@@ -715,7 +716,7 @@ function abrirConfig(previos){
     configJug.forEach((j,k)=>{ if(!COLORES.some(c=>c.id===j.color) || configJug.slice(0,k).some(x=>x.color===j.color)){
       const libre=COLORES.find(c=>!configJug.some(x=>x!==j && x.color===c.id)); j.color=libre?libre.id:'rojo'; } });
   }
-  else { configJug=[{nombre:'',color:'azul'},{nombre:'',color:'rojo'}]; }
+  else { configJug=COLORES.map(c=>({nombre:'', color:c.id})); }   // las 4 familias, sin nombres
   configN=configJug.length; nombresMemo={};
   configJug.forEach(j=>{ if(j.nombre) nombresMemo[j.color]=j.nombre; });
   pintaConfig(); ir('config');
