@@ -814,12 +814,17 @@ function activaMarquesinas(raiz=document){
     m.classList.remove('mueve'); inn.textContent = texto;
     if(inn.scrollWidth <= m.clientWidth + 1) return;          // cabe: se queda quieto
     inn.innerHTML = `<span>${esc(texto)}</span><span aria-hidden="true">${esc(texto)}</span>`;
-    const dist = inn.firstElementChild.offsetWidth;            // ancho del nombre + separación
-    m.classList.add('mueve');
+    m.classList.add('mueve');                                  // ANTES de medir: así cuenta el hueco de separación
+    const dpr = window.devicePixelRatio || 1;
+    // recorrido = nombre + hueco, ajustado a píxeles reales de la pantalla → empalme exacto, sin saltos
+    const dist = Math.round(inn.firstElementChild.getBoundingClientRect().width * dpr) / dpr;
+    [...inn.children].forEach(sp=>sp.style.width=dist+'px');   // cada repetición mide exactamente el recorrido
+    // velocidad que avanza un número ENTERO de píxeles reales por fotograma (60/120 Hz) → sin temblor
+    const vel = (60 / dpr) * Math.max(1, Math.round(35 / (60 / dpr)));    // ≈ 30-40 px/s
     // valores fijos (sin variables CSS) para que Safari la ejecute en la tarjeta gráfica
     inn.animate(
       [{transform:'translate3d(0,0,0)'}, {transform:`translate3d(${-dist}px,0,0)`}],
-      {duration: dist/30*1000, iterations: Infinity, easing: 'linear'}   // 30 px/s constantes
+      {duration: dist/vel*1000, iterations: Infinity, easing: 'linear'}
     );
   });
 }
