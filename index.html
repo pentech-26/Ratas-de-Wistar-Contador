@@ -48,13 +48,17 @@ button{font:inherit;cursor:pointer;border:none}
 #splash .fondo-splash{position:absolute;inset:-40px;background:url(splash.jpg) center/cover;filter:blur(24px) brightness(.75);transform:scale(1.1)}
 #splash .lienzo-splash{position:relative;height:min(100vh, calc(100vw * 1672 / 941));height:min(100dvh, calc(100vw * 1672 / 941));aspect-ratio:941/1672;background:url(splash.jpg) center/cover no-repeat;box-shadow:0 0 60px rgba(0,0,0,.45);animation:entraSplash .9s ease-out}
 /* Móviles en vertical: versión alargada a pantalla completa, sin franjas */
-@media (max-aspect-ratio: 13/20){
-  #splash .lienzo-splash{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-    width:max(100vw, calc(100vh * 941 / 2070));width:max(100vw, calc(100dvh * 941 / 2070));
-    height:auto;aspect-ratio:941/2070;background-image:url(splash-alto.jpg);box-shadow:none;animation:fundeSplash .9s ease-out}
-  #splash .brillo-toca{bottom:15.6%!important;height:5.7%!important}
+/* Móviles más alargados que la imagen: imagen original anclada abajo, sin rellenos inventados */
+@media (max-aspect-ratio: 941/1672){
+  #splash{background:linear-gradient(#1c2e19 0%, #2a4226 45%, #44261b 55%, #44261b 100%)}
   #splash .fondo-splash{display:none}
+  #splash .lienzo-splash{position:absolute;left:50%;top:auto;bottom:0;transform:translateX(-50%);
+    width:min(108vw, calc(100vh * 941 / 1672));width:min(108vw, calc(100dvh * 941 / 1672));
+    height:auto;aspect-ratio:941/1672;box-shadow:none;animation:fundeSplash .9s ease-out}
+  #splash .lienzo-splash::before{content:'';position:absolute;left:0;right:0;top:-2px;height:16%;
+    background:linear-gradient(#1c2e19 0%, rgba(28,46,25,.55) 45%, rgba(28,46,25,0) 100%);pointer-events:none}
 }
+html:has(#splash.activa), body:has(#splash.activa){background:#44261b}
 @keyframes fundeSplash{from{opacity:0}to{opacity:1}}
 #splash .brillo-toca{position:absolute;left:18%;right:18%;bottom:7.5%;height:7%;border-radius:50%;background:radial-gradient(ellipse at center, rgba(255,221,107,.55), rgba(255,221,107,0) 70%);mix-blend-mode:screen;animation:latido 1.6s ease-in-out infinite;pointer-events:none}
 #splash .huellas{display:none}
@@ -86,6 +90,7 @@ button{font:inherit;cursor:pointer;border:none}
 .btn:disabled{opacity:.45;pointer-events:none}
 .pila{display:flex;flex-direction:column;gap:14px}
 .pie-legal{margin-top:auto;padding-top:22px;color:rgba(251,246,234,.6);font-size:11.5px;text-align:center;line-height:1.5}
+.pie-legal .version{margin-top:8px;font-weight:800;letter-spacing:1.5px;color:rgba(251,246,234,.8);font-size:12px}
 .pie-legal b{color:rgba(251,246,234,.85)}
 .oculto{display:none!important}
 
@@ -195,17 +200,18 @@ tfoot .celda-cat span{font-family:'Baloo 2';font-size:20px;color:var(--tinta)}
 
 
 /* ---------- AVATARES DE FAMILIA ---------- */
-img.avatar{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(40,25,10,.25))}
+img.avatar{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(40,25,10,.25));image-rendering:-webkit-optimize-contrast}
 .ficha.ficha-cfg,.ficha.ficha-punt,.ficha.ficha-hist{background:none;border:none;padding:0;border-radius:50%}
-.ficha.ficha-cfg{width:54px;height:54px}
+.ficha.ficha-cfg{width:66px;height:66px}
 .ficha.ficha-cfg:active{transform:scale(.92) rotate(-6deg)}
-.ficha.ficha-punt{width:48px;height:48px}
-.ficha.ficha-hist{width:56px;height:56px}
-.peana .rata{width:62px!important;height:62px!important;margin:0 auto 4px!important}
-.podio.n4 .peana .rata{width:52px!important;height:52px!important}
-.cab-jug img.avatar{width:38px;height:38px}
+.ficha.ficha-punt{width:60px;height:60px}
+.ficha.ficha-hist{width:68px;height:68px}
+.peana .rata{width:84px!important;height:84px!important;margin:0 auto 4px!important}
+.podio.n3 .peana .rata{width:min(84px,25vw)!important;height:min(84px,25vw)!important}
+.podio.n4 .peana .rata{width:min(74px,20vw)!important;height:min(74px,20vw)!important}
+.cab-jug img.avatar{width:min(48px,11.5vw);height:min(48px,11.5vw)}
 .chip-fila{display:flex;align-items:center;justify-content:center;gap:4px}
-.chip-fila img.avatar{width:28px;height:28px;flex:none}
+.chip-fila img.avatar{width:36px;height:36px;flex:none}
 .chip{padding:6px 6px 6px!important}
 #victoria .medallon{background:none!important;border:none!important;box-shadow:0 0 0 6px #3a2414,0 0 0 12px var(--queso),0 0 0 17px #3a2414,0 0 60px 20px rgba(244,196,48,.35),0 18px 40px rgba(0,0,0,.45)!important}
 #victoria .medallon img.avatar{width:100%;height:100%;animation:menea 1.4s ease-in-out .8s infinite;transform-origin:50% 85%;filter:none}
@@ -445,8 +451,8 @@ const FAMILIAS_CON_AVATAR=['rojo','azul','amarillo','blanco'];
 const RX_NOMBRE_DEF=/^familia\s+(roja|azul|amarilla|blanca|verde|morada|gris)$/i;
 const esNombreDef = n => !n || RX_NOMBRE_DEF.test(String(n).trim());
 const nombreDef = id => `Familia ${(COLORES.find(c=>c.id===id)||{nom:'Blanca'}).nom}`;
-function avatar(id, clase='avatar'){
-  if(FAMILIAS_CON_AVATAR.includes(id)) return `<img class="${clase}" src="iconos/familias/${id}.webp" alt="">`;
+function avatar(id, grande=false){
+  if(FAMILIAS_CON_AVATAR.includes(id)) return `<img class="avatar" src="iconos/familias/${grande?'':'mini/'}${id}.webp" alt="" decoding="async">`;
   return ratSVG((COLORES.find(c=>c.id===id)||{hex:'#999'}).hex);
 }
 // tipo: 'pv' = número directo; 'toggle' = sí/no; 'cuenta' = se cuenta y se divide
@@ -510,7 +516,8 @@ function cerrarModales(){ $$('.modal').forEach(m=>m.classList.remove('activa'));
 $$('[data-cerrar]').forEach(b=>b.onclick=cerrarModales);
 $$('.modal').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m) cerrarModales(); }));
 $$('[data-volver]').forEach(b=>b.onclick=()=>{ clic(); ir(b.dataset.volver); });
-$$('[data-legal]').forEach(el=>el.innerHTML=TEXTO_LEGAL);
+const VERSION='1.0';
+$$('[data-legal]').forEach(el=>el.innerHTML=TEXTO_LEGAL+`<div class="version">v${VERSION}</div>`);
 
 function ratSVG(color){
   return `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 40c0-12 10-22 24-22 6 0 10 1 14 4l6-6c3 0 5 2 5 5l-4 5c2 3 3 6 3 9 0 4-3 7-7 7H18c-6 0-10-1-10-2z" fill="${color}"/><circle cx="44" cy="17" r="7" fill="${color}"/><circle cx="44" cy="17" r="3.5" fill="#f2a7a0"/><circle cx="50" cy="31" r="2.3" fill="#2b2118"/><path d="M8 40c-6 2-7 10 2 12" stroke="${color}" stroke-width="3.5" fill="none" stroke-linecap="round"/></svg>`;
@@ -534,7 +541,7 @@ function chillido(){
   const src=a.createBufferSource(), g=a.createGain();
   src.buffer=bufChillido;
   src.playbackRate.value=0.92+Math.random()*0.18; // cada chillido un pelín distinto
-  g.gain.value=0.8;
+  g.gain.value=0.3;   // volumen del chillido (0 = mudo, 1 = original)
   src.connect(g).connect(a.destination); src.start();
 }
 function nota(f, t0, dur, tipo='triangle', vol=.18){
@@ -546,7 +553,23 @@ function nota(f, t0, dur, tipo='triangle', vol=.18){
   g.gain.exponentialRampToValueAtTime(0.0001,a.currentTime+t0+dur);
   o.connect(g).connect(a.destination); o.start(a.currentTime+t0); o.stop(a.currentTime+t0+dur+.05);
 }
+/* Melodía de la intro (sonidos/intro.mp3): se descarga al cargar la página
+   y se decodifica al tocar el splash, para que suene al instante */
+let abIntro=null, fuenteIntro=null;
+fetch('sonidos/intro.mp3').then(r=>r.ok?r.arrayBuffer():null).then(b=>{ abIntro=b; }).catch(()=>{});
 function melodia(){
+  const a=audio(); if(!a||!sonido) return;
+  const tocar=ab=>new Promise((ok,ko)=>a.decodeAudioData(ab.slice(0),ok,ko)).then(buf=>{
+    if(!sonido) return;
+    const src=a.createBufferSource(), g=a.createGain(); src.buffer=buf; g.gain.value=0.9;
+    src.connect(g).connect(a.destination); src.start(); fuenteIntro=src;
+    src.onended=()=>{ if(fuenteIntro===src) fuenteIntro=null; };
+  });
+  if(abIntro) tocar(abIntro).catch(melodiaSintetica);
+  else fetch('sonidos/intro.mp3').then(r=>r.arrayBuffer()).then(b=>{ abIntro=b; return tocar(b); }).catch(melodiaSintetica);
+}
+function paraIntro(){ try{ if(fuenteIntro) fuenteIntro.stop(); }catch(e){} fuenteIntro=null; }
+function melodiaSintetica(){
   // Correteo de ratón: escala pentatónica saltarina + bajo de "laboratorio"
   const N={C5:523.25,D5:587.33,E5:659.25,G5:783.99,A5:880,C6:1046.5,D6:1174.66,E6:1318.5,G4:392,C4:261.63,A4:440,F4:349.23};
   const m=[['E5',0],['G5',.13],['A5',.26],['G5',.39],['E5',.52],['D5',.65],['E5',.78],['G5',.91],
@@ -560,7 +583,7 @@ document.addEventListener('pointerdown', e=>{ const b=e.target.closest('button')
 function chirrido(){ nota(1800,0,.06,'sine',.08); nota(2300,.06,.08,'sine',.07); }
 function fanfarria(){ [[523,0],[659,.12],[784,.24],[1047,.4],[784,.58],[1047,.7]].forEach(([f,t])=>nota(f,t,.25,'square',.08)); nota(262,.4,.8,'triangle',.18); }
 function pintaSonido(){ const b=$('#btnSonido'); b.innerHTML=`<img src="iconos/menu/sonido-${sonido?'on':'off'}.svg" alt="">`; b.setAttribute('aria-label', sonido?'Silenciar':'Activar sonido'); }
-$('#btnSonido').onclick=()=>{ sonido=!sonido; ls.set(LS.sonido,sonido); pintaSonido(); if(sonido){ ultimoChillido=0; chillido(); } };
+$('#btnSonido').onclick=()=>{ sonido=!sonido; ls.set(LS.sonido,sonido); pintaSonido(); if(sonido){ ultimoChillido=0; chillido(); } else paraIntro(); };
 
 /* ---------- Splash ---------- */
 (function huellas(){
@@ -812,7 +835,7 @@ function celebrarVictoria(alAcabar){
   const empate = !solo && cl[0].total===cl[1].total;
   const med=$('#vicMedallon');
   med.querySelectorAll('svg,img.avatar').forEach(x=>x.remove());
-  med.insertAdjacentHTML('beforeend', avatar(g.color));
+  med.insertAdjacentHTML('beforeend', avatar(g.color,true));
   $('#vicSub').textContent = solo ? 'Fin del reto en solitario' : (empate ? 'Victoria por orden de turno' : 'Nuevo líder de la colonia');
   const vn=$('#vicNombre'); vn.textContent = g.nombre;
   vn.style.fontSize = `min(${Math.min(11, 150/Math.max(g.nombre.length,1)).toFixed(2)}vw, 58px)`;
@@ -842,7 +865,7 @@ function mostrarResultados(soloVer, celebrar){
   const pod=$('#podio'); pod.style.setProperty('--n', n); pod.className='podio n'+n;
   pod.innerHTML = orden.map(k=>{
     const p=cl[k], col=COLORES.find(c=>c.id===p.color).hex;
-    return `<div class="peana p${k+1}">${k===0?'<img class="corona" src="iconos/menu/corona.svg" alt="Ganador">':''}<div class="rata">${avatar(p.color)}</div><div class="nom"><span>${esc(p.nombre)}</span></div><div class="bloque"><div class="pos">${k+1}º</div><div class="pts">${p.total} PV</div></div></div>`;
+    return `<div class="peana p${k+1}">${k===0?'<img class="corona" src="iconos/menu/corona.svg" alt="Ganador">':''}<div class="rata">${avatar(p.color,true)}</div><div class="nom"><span>${esc(p.nombre)}</span></div><div class="bloque"><div class="pos">${k+1}º</div><div class="pts">${p.total} PV</div></div></div>`;
   }).join('');
   // tabla: columnas en orden de clasificación
   const cols=cl.map(p=>p.i);

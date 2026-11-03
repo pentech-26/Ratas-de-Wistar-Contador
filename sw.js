@@ -2,13 +2,13 @@
    Estrategia: RED PRIMERO (siempre la última versión publicada) y caché solo
    como respaldo sin conexión. Al instalar se descarga todo saltándose la caché
    HTTP del navegador para no guardar versiones antiguas. */
-const CACHE = 'ratas-wistar-v21';
+const CACHE = 'ratas-wistar-v24';
 const ICONOS = ['marcador','habilidades','camas','habitaciones','invitados','inventos','finales','electricidad','recursos','comodines'].map(n => `./iconos/${n}.png`);
 const MENU = ['nueva','continuar','historial','ayuda','sonido-on','sonido-off','volver','madriguera','resumen','editar','borrar','guardar','revancha','corona','llave'].map(n => `./iconos/menu/${n}.svg`);
-const FAMILIAS = ['azul','rojo','amarillo','blanco'].map(n => `./iconos/familias/${n}.webp`);
-const ARCHIVOS = ['./', './index.html', './manifest.json', './splash.jpg', './splash-alto.jpg', './icono-app.png',
+const FAMILIAS = ['azul','rojo','amarillo','blanco'].flatMap(n => [`./iconos/familias/${n}.webp`, `./iconos/familias/mini/${n}.webp`]);
+const ARCHIVOS = ['./', './index.html', './manifest.json', './splash.jpg', './icono-app.png',
   './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png',
-  './sonidos/chillido.mp3', './sonidos/victoria.mp3', ...MENU, ...FAMILIAS, ...ICONOS];
+  './sonidos/intro.mp3', './sonidos/chillido.mp3', './sonidos/victoria.mp3', ...MENU, ...FAMILIAS, ...ICONOS];
 
 self.addEventListener('install', e => {
   e.waitUntil(
