@@ -216,6 +216,21 @@ img.avatar{display:block;width:100%;height:100%;object-fit:contain;filter:drop-s
 #victoria .medallon{background:none!important;border:none!important;box-shadow:0 0 0 6px #3a2414,0 0 0 12px var(--queso),0 0 0 17px #3a2414,0 0 60px 20px rgba(244,196,48,.35),0 18px 40px rgba(0,0,0,.45)!important}
 #victoria .medallon img.avatar{width:100%;height:100%;animation:menea 1.4s ease-in-out .8s infinite;transform-origin:50% 85%;filter:none}
 #victoria .vic-corona{z-index:2;top:-58px}
+
+/* ---------- FICHA DE PERSONAJE (zoom al tocar una rata) ---------- */
+img.avatar[data-fam]{cursor:zoom-in;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+#victoria img.avatar{cursor:inherit}
+#zoomRata{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(18,12,6,.74);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);cursor:zoom-out;overflow:hidden}
+#zoomRata.activa{display:flex;animation:vicFunde .25s ease-out}
+#zoomRata.saliendo{animation:vicSale .25s ease-in forwards}
+#zoomRata .zr-rayos{position:absolute;left:50%;top:40%;width:170vmax;height:170vmax;transform:translate(-50%,-50%);background:repeating-conic-gradient(from 0deg, rgba(244,196,48,.14) 0deg 9deg, transparent 9deg 22.5deg);animation:gira 30s linear infinite;-webkit-mask:radial-gradient(circle, #000 0 14%, transparent 45%);mask:radial-gradient(circle, #000 0 14%, transparent 45%);pointer-events:none}
+#zoomRata .zr-caja{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;max-width:380px;width:100%}
+#zoomRata .zr-img{width:min(76vw,340px);aspect-ratio:1;object-fit:contain;filter:drop-shadow(0 18px 30px rgba(0,0,0,.55));animation:zrPop .55s cubic-bezier(.2,1.5,.4,1) both}
+#zoomRata .zr-rol{margin-top:14px;font-family:'Baloo 2',cursive;font-weight:800;font-size:clamp(30px,9vw,40px);line-height:1;color:var(--queso);text-shadow:0 3px 0 #8a5a34,0 5px 0 #3a2414,0 10px 18px rgba(0,0,0,.4);animation:sube .4s ease-out .15s both}
+#zoomRata .zr-fam{margin-top:12px;display:inline-block;padding:6px 16px 5px;border-radius:999px;border:3px solid #3a2414;box-shadow:0 3px 0 #3a2414;font-weight:800;font-size:15px;animation:sube .4s ease-out .25s both}
+#zoomRata .zr-desc{margin:14px 0 0;color:var(--bata);font-size:15px;line-height:1.45;max-width:320px;animation:sube .4s ease-out .35s both}
+#zoomRata .zr-toca{margin-top:22px;color:rgba(251,246,234,.6);font-weight:700;font-size:13px;animation:sube .4s ease-out .5s both}
+@keyframes zrPop{0%{transform:scale(.25) rotate(-12deg);opacity:0}100%{transform:none;opacity:1}}
 /* ---------- VICTORIA ---------- */
 #victoria{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;flex-direction:column;overflow:hidden;cursor:pointer;user-select:none;text-align:center;padding:24px 20px calc(24px + env(safe-area-inset-bottom));background:radial-gradient(circle at 50% 42%, #4c7343 0%, #2a4226 62%, #1d2f1a 100%)}
 #victoria.activa{display:flex;animation:vicFunde .35s ease-out}
@@ -326,7 +341,7 @@ img.avatar{display:block;width:100%;height:100%;object-fit:contain;filter:drop-s
   <div class="tarjeta">
     <p class="etiqueta">Jugadores en orden de turno final</p>
     <div id="listaJugadores"></div>
-    <p class="ayuda">Ordénalos según el orden de turno al acabar la 5.ª ronda (tras la Cabaña del Alquimista). Sirve para el desempate. Toca la rata para cambiar de familia.</p>
+    <p class="ayuda">Ordénalos según el orden de turno al acabar la 5.ª ronda (tras la Cabaña del Alquimista). Sirve para el desempate. Toca la rata para verla en grande.</p>
   </div>
   <div style="margin-top:16px">
     <button class="btn btn-queso" id="btnEmpezar"><img class="ico-btn" src="iconos/menu/nueva.svg" alt="">¡A contar queso!</button>
@@ -381,6 +396,18 @@ img.avatar{display:block;width:100%;height:100%;object-fit:contain;filter:drop-s
   </div>
   <div id="listaHist" class="pila"></div>
 </section>
+
+<!-- ============ FICHA DE PERSONAJE ============ -->
+<div id="zoomRata" role="dialog" aria-modal="true" aria-label="Personaje">
+  <div class="zr-rayos"></div>
+  <div class="zr-caja">
+    <img class="zr-img" id="zrImg" alt="">
+    <div class="zr-rol" id="zrRol"></div>
+    <div class="zr-fam" id="zrFam"></div>
+    <p class="zr-desc" id="zrDesc"></p>
+    <div class="zr-toca">Toca para cerrar</div>
+  </div>
+</div>
 
 <!-- ============ VICTORIA ============ -->
 <div id="victoria" role="dialog" aria-label="Ganador de la partida">
@@ -451,8 +478,8 @@ const FAMILIAS_CON_AVATAR=['rojo','azul','amarillo','blanco'];
 const RX_NOMBRE_DEF=/^familia\s+(roja|azul|amarilla|blanca|verde|morada|gris)$/i;
 const esNombreDef = n => !n || RX_NOMBRE_DEF.test(String(n).trim());
 const nombreDef = id => `Familia ${(COLORES.find(c=>c.id===id)||{nom:'Blanca'}).nom}`;
-function avatar(id, grande=false){
-  if(FAMILIAS_CON_AVATAR.includes(id)) return `<img class="avatar" src="iconos/familias/${grande?'':'mini/'}${id}.webp" alt="" decoding="async">`;
+function avatar(id, grande=false, nombre=''){
+  if(FAMILIAS_CON_AVATAR.includes(id)) return `<img class="avatar" data-fam="${id}" data-nom="${esc(nombre||'')}" src="iconos/familias/${grande?'':'mini/'}${id}.webp" alt="" decoding="async" draggable="false">`;
   return ratSVG((COLORES.find(c=>c.id===id)||{hex:'#999'}).hex);
 }
 // tipo: 'pv' = número directo; 'toggle' = sí/no; 'cuenta' = se cuenta y se divide
@@ -673,21 +700,14 @@ function pintaConfig(){
     const col=COLORES.find(c=>c.id===j.color);
     const fila=document.createElement('div'); fila.className='fila-jugador';
     fila.innerHTML=`<div class="orden">${i+1}º</div>
-      <button class="ficha ficha-cfg" aria-label="Cambiar familia">${avatar(col.id)}</button>
+      <div class="ficha ficha-cfg">${avatar(col.id,false,j.nombre)}</div>
       <input maxlength="14" placeholder="Familia ${col.nom}" value="${esc(j.nombre)}">
       ${configJug.length>1?`<div class="flechas"><button aria-label="Subir" ${i===0?"disabled":""}><svg viewBox="0 0 24 24"><path d="M5 15 L12 8 L19 15" fill="none" stroke="#3a2414" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button aria-label="Bajar" ${i===configJug.length-1?"disabled":""}><svg viewBox="0 0 24 24"><path d="M5 9 L12 16 L19 9" fill="none" stroke="#3a2414" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>`:""}`;
     if(i===filaMovida) fila.classList.add("movida");
-    const [bCol]=fila.querySelectorAll('.ficha');
     const inp=fila.querySelector('input');
     const [up,down]=fila.querySelectorAll('.flechas button');
-    inp.oninput=()=>{ j.nombre=inp.value; };
-    bCol.onclick=()=>{
-      const idx=(COLORES.findIndex(c=>c.id===j.color)+1)%COLORES.length;
-      const nuevo=COLORES[idx].id;
-      const otro=configJug.find((x,k)=>k!==i && x.color===nuevo);
-      if(otro) otro.color=j.color;   // intercambio de familias
-      j.color=nuevo; filaMovida=i; clic(); pintaConfig();
-    };
+    const imAv=fila.querySelector('img.avatar');
+    inp.oninput=()=>{ j.nombre=inp.value; if(imAv) imAv.dataset.nom=inp.value; };
     if(up){
     up.onclick=()=>{ if(i>0){ [configJug[i-1],configJug[i]]=[configJug[i],configJug[i-1]]; filaMovida=i-1; clic(); pintaConfig(); } };
     down.onclick=()=>{ if(i<configJug.length-1){ [configJug[i+1],configJug[i]]=[configJug[i],configJug[i+1]]; filaMovida=i+1; clic(); pintaConfig(); } };
@@ -723,7 +743,7 @@ function guardar(){ ls.set(LS.partida, partida); }
 function pintaMarcador(){
   $('#marcador').innerHTML = partida.jugadores.map((j,i)=>{
     const col=COLORES.find(c=>c.id===j.color).hex;
-    return `<div class="chip" style="--c:${col}"><div class="n">${esc(j.nombre.replace(/^Familia\s+/i,""))}</div><div class="chip-fila">${avatar(j.color)}<div class="t">${total(i)}</div></div></div>`;
+    return `<div class="chip" style="--c:${col}"><div class="n">${esc(j.nombre.replace(/^Familia\s+/i,""))}</div><div class="chip-fila">${avatar(j.color,false,j.nombre)}<div class="t">${total(i)}</div></div></div>`;
   }).join('');
 }
 function pintaProgreso(){
@@ -739,7 +759,7 @@ function pintaCategoria(){
   partida.jugadores.forEach((j,i)=>{
     const col=COLORES.find(c=>c.id===j.color).hex;
     const fila=document.createElement('div'); fila.className='fila-punt';
-    const izq=`<div class="ficha ficha-punt">${avatar(j.color)}</div>
+    const izq=`<div class="ficha ficha-punt">${avatar(j.color,false,j.nombre)}</div>
       <div class="nombre">${esc(j.nombre)}${cat.tipo==='cuenta'?`<div class="extra" data-extra>= ${pvCategoria(cat,i)} PV</div>`:''}</div>`;
     if(cat.tipo==='toggle'){
       fila.innerHTML=izq+`<button class="interruptor ${partida.valores[cat.id][i]?'on':''}" role="switch" aria-checked="${!!partida.valores[cat.id][i]}" aria-label="Electricidad avanzada"></button>`;
@@ -783,6 +803,41 @@ $('#btnSig').onclick=()=>{
 $('#btnSalirPunt').onclick=()=>{ clic(); pintaMenu(); ir('menu'); toast('Partida guardada. Puedes continuarla cuando quieras.'); };
 $('#btnTabla').onclick=()=>{ clic(); mostrarResultados(true); };
 
+
+/* ---------- Ficha de personaje ---------- */
+const PERSONAJES = {
+  azul:     {rol:'El Científico',  txt:'#fff',    desc:'Gafas redondas, lápiz en la oreja y planos bajo el brazo. Nada sale de la madriguera sin pasar por sus cálculos.'},
+  rojo:     {rol:'La Inventora',   txt:'#fff',    desc:'Gafas de aviadora y una bombilla siempre encendida: cada idea suya acaba convertida en un invento.'},
+  amarillo: {rol:'La Soldadora',   txt:'#3a2414', desc:'Careta, guantes y llave inglesa. Si algo cruje, se suelta o echa humo, ella lo deja como nuevo.'},
+  blanco:   {rol:'El Explorador',  txt:'#3a2414', desc:'Linterna, brújula y mochila a la espalda: no queda rincón de la granja que no haya olfateado.'}
+};
+function abrirRata(fam, nombre){
+  const per=PERSONAJES[fam]; if(!per) return;
+  const col=COLORES.find(c=>c.id===fam)||{hex:'#999',nom:''};
+  $('#zrImg').src=`iconos/familias/${fam}.webp`;
+  $('#zrRol').textContent=per.rol;
+  const fn=$('#zrFam');
+  const propio = nombre && !esNombreDef(nombre);
+  fn.textContent = propio ? `${nombre} · Familia ${col.nom}` : `Familia ${col.nom}`;
+  fn.style.background=col.hex; fn.style.color=per.txt;
+  $('#zrDesc').textContent=per.desc;
+  const z=$('#zoomRata'); z.classList.remove('saliendo'); z.classList.add('activa');
+  ultimoChillido=0; chillido();
+}
+function cerrarRata(){
+  const z=$('#zoomRata'); if(!z.classList.contains('activa')) return;
+  z.classList.add('saliendo');
+  setTimeout(()=>z.classList.remove('activa','saliendo'),240);
+}
+$('#zoomRata').addEventListener('click', cerrarRata);
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') cerrarRata(); });
+// Tocar una rata (salvo en la pantalla de victoria) abre su ficha
+document.addEventListener('click', e=>{
+  const img=e.target.closest('img.avatar[data-fam]');
+  if(!img || img.closest('#victoria') || img.closest('#zoomRata')) return;
+  e.stopPropagation(); abrirRata(img.dataset.fam, img.dataset.nom);
+});
+document.addEventListener('contextmenu', e=>{ if(e.target.closest('img.avatar')) e.preventDefault(); });
 
 /* ---------- Pantalla de victoria ---------- */
 let bufVictoria=null;
@@ -865,13 +920,13 @@ function mostrarResultados(soloVer, celebrar){
   const pod=$('#podio'); pod.style.setProperty('--n', n); pod.className='podio n'+n;
   pod.innerHTML = orden.map(k=>{
     const p=cl[k], col=COLORES.find(c=>c.id===p.color).hex;
-    return `<div class="peana p${k+1}">${k===0?'<img class="corona" src="iconos/menu/corona.svg" alt="Ganador">':''}<div class="rata">${avatar(p.color,true)}</div><div class="nom"><span>${esc(p.nombre)}</span></div><div class="bloque"><div class="pos">${k+1}º</div><div class="pts">${p.total} PV</div></div></div>`;
+    return `<div class="peana p${k+1}">${k===0?'<img class="corona" src="iconos/menu/corona.svg" alt="Ganador">':''}<div class="rata">${avatar(p.color,true,p.nombre)}</div><div class="nom"><span>${esc(p.nombre)}</span></div><div class="bloque"><div class="pos">${k+1}º</div><div class="pts">${p.total} PV</div></div></div>`;
   }).join('');
   // tabla: columnas en orden de clasificación
   const cols=cl.map(p=>p.i);
   let h=`<colgroup><col class="c-cat">${cols.map(()=>'<col>').join('')}</colgroup><thead><tr><th></th>${cl.map((p,k)=>{
     const col=COLORES.find(c=>c.id===p.color).hex;
-    return `<th class="${k===0?'col-gana':''}"><div class="cab-jug">${avatar(p.color)}<span class="pos-mini">${k+1}º</span><span class="n" style="color:${COLORES.find(c=>c.id===p.color).txt||col}">${esc(p.nombre)}</span></div></th>`;
+    return `<th class="${k===0?'col-gana':''}"><div class="cab-jug">${avatar(p.color,false,p.nombre)}<span class="pos-mini">${k+1}º</span><span class="n" style="color:${COLORES.find(c=>c.id===p.color).txt||col}">${esc(p.nombre)}</span></div></th>`;
   }).join('')}</tr></thead><tbody>`;
   CATEGORIAS.forEach(c=>{
     h+=`<tr><td><div class="celda-cat"><img src="iconos/${c.id}.png" alt=""><span>${c.corto}</span></div></td>${cols.map((i,k)=>{
@@ -919,7 +974,7 @@ function pintaHistorial(){
   L.innerHTML = hist.map(p=>{
     const g=p.ranking[0], col=COLORES.find(c=>c.id===g.color)?.hex||'#999';
     const f=new Date(p.fecha).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'});
-    return `<div class="tarjeta partida"><div class="ficha ficha-hist">${avatar(g.color)}</div>
+    return `<div class="tarjeta partida"><div class="ficha ficha-hist">${avatar(g.color,false,g.nombre)}</div>
       <div style="flex:1;min-width:0"><div class="fecha">${f}</div><div class="gan"><img class="ico-mini" src="iconos/menu/corona.svg" alt="">${esc(g.nombre)} · ${g.total} PV</div>
       <div class="resto">${p.ranking.slice(1).map(r=>`${esc(r.nombre)} ${r.total}`).join(' · ')}</div></div></div>`;
   }).join('');
