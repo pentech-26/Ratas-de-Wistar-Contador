@@ -71,13 +71,13 @@ html:has(#splash.activa), body:has(#splash.activa){background:#44261b}
 /* ---------- COMUNES ---------- */
 .cabecera{display:flex;align-items:center;gap:10px;color:var(--bata);margin-bottom:14px}
 .cabecera h2{font-size:28px;color:var(--queso);flex:1}
-.icono-btn{width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,.12);color:var(--bata);display:grid;place-items:center;font-size:20px}
-.icono-btn:active{transform:scale(.94)}
-.ico-cab{width:30px;height:30px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+.icono-btn{width:46px;height:46px;flex:none;border-radius:14px;background:var(--bata);border:2.5px solid #3a2414;box-shadow:0 3px 0 #3a2414, 0 6px 12px rgba(0,0,0,.18);color:var(--tinta);display:grid;place-items:center;font-size:20px;transition:transform .08s, box-shadow .08s}
+.icono-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #3a2414}
+.ico-cab{width:30px;height:30px}
 .ico-grande{width:58px;height:58px}
 .duo-acceso{display:flex;justify-content:center;gap:4px}
 .ico-mini{width:22px;height:22px;vertical-align:-3px;margin-right:6px}
-#btnSonido img{width:30px;height:30px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+#btnSonido img{width:30px;height:30px}
 .tarjeta{background:var(--bata);border-radius:var(--r);padding:18px;box-shadow:var(--sombra);position:relative}
 .tarjeta + .tarjeta{margin-top:14px}
 .btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px 18px;border-radius:16px;font-family:'Baloo 2';font-size:21px;font-weight:800;transition:transform .08s}
