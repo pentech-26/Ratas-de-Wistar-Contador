@@ -60,8 +60,17 @@ button{font:inherit;cursor:pointer;border:none}
 }
 html:has(#splash.activa), body:has(#splash.activa){background:#44261b}
 @keyframes fundeSplash{from{opacity:0}to{opacity:1}}
-#splash .brillo-toca{position:absolute;left:18%;right:18%;bottom:7.5%;height:7%;border-radius:50%;background:radial-gradient(ellipse at center, rgba(255,221,107,.55), rgba(255,221,107,0) 70%);mix-blend-mode:screen;animation:latido 1.6s ease-in-out infinite;pointer-events:none}
+#splash .brillo-toca{position:absolute;left:14%;right:14%;bottom:5%;height:10%;border-radius:50%;background:radial-gradient(ellipse at center, rgba(255,221,107,.55), rgba(255,221,107,0) 70%);mix-blend-mode:screen;animation:latido 1.6s ease-in-out infinite;pointer-events:none}
 #splash .huellas{display:none}
+#splash .lienzo-splash{container-type:size}
+/* "Toca para empezar" dibujado encima de la imagen, en el idioma del móvil */
+#splash .toca{position:absolute;left:0;right:0;top:87%;display:flex;flex-direction:column;align-items:center;gap:1.4cqw;pointer-events:none;animation:respira 1.8s ease-in-out infinite}
+#splash .toca-fila{display:flex;align-items:center;gap:2.6cqw;max-width:94cqw}
+#splash .toca-txt{font-family:'Baloo 2',cursive;font-weight:800;font-size:var(--fs,6.6cqw);line-height:1;color:#f6e7c8;white-space:nowrap;letter-spacing:.02em;
+  text-shadow:0 .5cqw 0 #3a2414, 0 0 1.6cqw rgba(58,36,20,.9), 0 0 4cqw rgba(255,214,120,.35)}
+#splash .toca-rayos{width:7cqw;flex:none;overflow:visible}
+#splash .toca-pata{width:62cqw;height:auto;overflow:visible}
+@keyframes respira{50%{transform:scale(1.045);opacity:.85}}
 #splash .huellas span{position:absolute;width:9px;height:9px;border-radius:50%;background:rgba(255,221,107,.7);animation:pisada 4s linear infinite}
 @keyframes entraSplash{from{opacity:0;transform:scale(1.04)}to{opacity:1;transform:none}}
 @keyframes flota{50%{transform:translateY(-8px) rotate(-2deg)}}
@@ -74,6 +83,9 @@ html:has(#splash.activa), body:has(#splash.activa){background:#44261b}
 .icono-btn{width:46px;height:46px;flex:none;border-radius:14px;background:var(--bata);border:2.5px solid #3a2414;box-shadow:0 3px 0 #3a2414, 0 6px 12px rgba(0,0,0,.18);color:var(--tinta);display:grid;place-items:center;font-size:20px;transition:transform .08s, box-shadow .08s}
 .icono-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #3a2414}
 .ico-cab{width:30px;height:30px}
+.btn-idioma{position:relative}
+.cod-idioma{position:absolute;right:-7px;bottom:-7px;min-width:24px;background:var(--queso);color:#3a2414;border:2px solid #3a2414;border-radius:8px;font:800 11px/1 'Baloo 2',sans-serif;padding:3px 4px 2px;text-align:center}
+#listaIdiomas .btn{font-size:19px;padding:12px 16px}
 .ico-grande{width:58px;height:58px}
 .duo-acceso{display:flex;justify-content:center;gap:4px}
 .ico-mini{width:22px;height:22px;vertical-align:-3px;margin-right:6px}
@@ -313,26 +325,27 @@ img.avatar[data-fam]{cursor:zoom-in;-webkit-touch-callout:none;-webkit-user-sele
 <!-- ============ SPLASH ============ -->
 <section id="splash" class="pantalla activa" aria-label="Pantalla de entrada">
   <div class="fondo-splash"></div>
-  <div class="lienzo-splash" role="img" aria-label="Ratas de Wistar · Contador. Toca para empezar">
+  <div class="lienzo-splash" role="img" data-ia="splashAria" aria-label="Ratas de Wistar · Contador. Toca para empezar">
     <div class="brillo-toca"></div>
+    <div class="toca" aria-hidden="true"><div class="toca-fila"><svg class="toca-rayos" style="transform:scaleX(-1)" viewBox="0 0 40 40" aria-hidden="true"><g stroke="#f2b84b" stroke-width="4.5" stroke-linecap="round"><path d="M8 9 L30 15"/><path d="M4 20 L30 20"/><path d="M8 31 L30 25"/></g></svg><span class="toca-txt" data-i="tocaEmpezar">Toca para empezar</span><svg class="toca-rayos" viewBox="0 0 40 40" aria-hidden="true"><g stroke="#f2b84b" stroke-width="4.5" stroke-linecap="round"><path d="M8 9 L30 15"/><path d="M4 20 L30 20"/><path d="M8 31 L30 25"/></g></svg></div><svg class="toca-pata" viewBox="0 0 320 50" aria-hidden="true"><g stroke="#e9c27a" stroke-width="5" stroke-linecap="round"><path d="M4 25 H118"/><path d="M202 25 H316"/></g><g fill="#f2d39a"><ellipse cx="160" cy="33" rx="17" ry="14"/><ellipse cx="139" cy="17" rx="6.5" ry="8.5" transform="rotate(-20 139 17)"/><ellipse cx="152" cy="7" rx="6.5" ry="8.5" transform="rotate(-6 152 7)"/><ellipse cx="168" cy="7" rx="6.5" ry="8.5" transform="rotate(6 168 7)"/><ellipse cx="181" cy="17" rx="6.5" ry="8.5" transform="rotate(20 181 17)"/></g></svg></div>
     <div class="huellas" id="huellas"></div>
   </div>
 </section>
 
 <!-- ============ ACCESO (licencia) ============ -->
 <section id="acceso" class="pantalla">
-  <div class="cabecera"><h2>Acceso</h2></div>
+  <div class="cabecera"><h2 data-i="acceso">Acceso</h2><button class="icono-btn btn-idioma" data-ia="idioma" aria-label="Idioma"><img class="ico-cab" src="iconos/menu/idioma.svg" alt=""><span class="cod-idioma">ES</span></button></div>
   <div class="tarjeta">
     <div class="duo-acceso"><img class="ico-grande" src="iconos/menu/llave.svg" alt=""><img class="ico-grande" src="iconos/menu/nueva.svg" alt=""></div>
-    <h3 style="font-size:24px;margin:6px 0">¿Tienes la clave?</h3>
-    <p class="ayuda">Introduce tu clave de licencia para desbloquear el contador sin límites.</p>
-    <input id="inClave" autocomplete="off" autocapitalize="characters" placeholder="TU CLAVE">
+    <h3 style="font-size:24px;margin:6px 0" data-i="tienesClave">¿Tienes la clave?</h3>
+    <p class="ayuda" data-i="introClave">Introduce tu clave de licencia para desbloquear el contador sin límites.</p>
+    <input id="inClave" autocomplete="off" autocapitalize="characters" data-ip="phClave" placeholder="TU CLAVE">
     <div class="error" id="errClave"></div>
-    <p class="ayuda" style="margin:-4px 0 14px"><b>¿Ya la compraste?</b> Tu clave está en el email de confirmación de Buy Me a Coffee.</p>
+    <p class="ayuda" style="margin:-4px 0 14px" data-ih="yaCompraste"><b>¿Ya la compraste?</b> Tu clave está en el email de confirmación de Buy Me a Coffee.</p>
     <div class="pila">
-      <button class="btn btn-queso" id="btnValidar">Desbloquear</button>
-      <button class="btn btn-madera" id="btnComprar">Comprar clave</button>
-      <button class="btn btn-linea" id="btnProbar">Probar gratis</button>
+      <button class="btn btn-queso" id="btnValidar" data-i="desbloquear">Desbloquear</button>
+      <button class="btn btn-madera" id="btnComprar" data-i="comprar">Comprar clave</button>
+      <button class="btn btn-linea" id="btnProbar" data-i="probar">Probar gratis</button>
     </div>
     <p class="ayuda" id="txtPrueba" style="margin-top:12px"></p>
   </div>
@@ -342,19 +355,20 @@ img.avatar[data-fam]{cursor:zoom-in;-webkit-touch-callout:none;-webkit-user-sele
 <!-- ============ MENÚ ============ -->
 <section id="menu" class="pantalla">
   <div class="cabecera">
+    <button class="icono-btn btn-idioma" data-ia="idioma" aria-label="Idioma"><img class="ico-cab" src="iconos/menu/idioma.svg" alt=""><span class="cod-idioma">ES</span></button>
     <span style="flex:1"></span>
     <button class="icono-btn" id="btnSonido" aria-label="Sonido"><img src="iconos/menu/sonido-on.svg" alt=""></button>
   </div>
   <div class="marca">
-    <img src="icono-app.png" alt="Ratas de Wistar · Contador">
-    <p>Recuento final de la colonia</p>
+    <img src="icono-app.png" data-ialt="marca" alt="Ratas de Wistar · Contador">
+    <p data-i="subtitulo">Recuento final de la colonia</p>
   </div>
   <div class="pila">
     <div class="aviso-prueba oculto" id="avisoPrueba"></div>
-    <button class="btn btn-queso" id="btnNueva"><img class="ico-btn" src="iconos/menu/nueva.svg" alt="">Nueva partida</button>
-    <button class="btn btn-madera oculto" id="btnContinuar"><img class="ico-btn" src="iconos/menu/continuar.svg" alt="">Continuar partida</button>
-    <button class="btn btn-claro" id="btnHistorial"><img class="ico-btn" src="iconos/menu/historial.svg" alt="">Historial</button>
-    <button class="btn btn-claro" id="btnAyuda"><img class="ico-btn" src="iconos/menu/ayuda.svg" alt="">Cómo se puntúa</button>
+    <button class="btn btn-queso" id="btnNueva"><img class="ico-btn" src="iconos/menu/nueva.svg" alt=""><span data-i="nueva">Nueva partida</span></button>
+    <button class="btn btn-madera oculto" id="btnContinuar"><img class="ico-btn" src="iconos/menu/continuar.svg" alt=""><span data-i="continuar">Continuar partida</span></button>
+    <button class="btn btn-claro" id="btnHistorial"><img class="ico-btn" src="iconos/menu/historial.svg" alt=""><span data-i="historial">Historial</span></button>
+    <button class="btn btn-claro" id="btnAyuda"><img class="ico-btn" src="iconos/menu/ayuda.svg" alt=""><span data-i="comoPuntua">Cómo se puntúa</span></button>
   </div>
   <div class="pie-legal" data-legal></div>
 </section>
@@ -362,30 +376,30 @@ img.avatar[data-fam]{cursor:zoom-in;-webkit-touch-callout:none;-webkit-user-sele
 <!-- ============ CONFIGURACIÓN ============ -->
 <section id="config" class="pantalla">
   <div class="cabecera">
-    <button class="icono-btn" data-volver="menu" aria-label="Volver"><img class="ico-cab" src="iconos/menu/volver.svg" alt=""></button>
-    <h2>Nueva partida</h2>
+    <button class="icono-btn" data-volver="menu" data-ia="volver" aria-label="Volver"><img class="ico-cab" src="iconos/menu/volver.svg" alt=""></button>
+    <h2 data-i="nueva">Nueva partida</h2>
   </div>
   <div class="tarjeta">
-    <p class="etiqueta">¿Qué familias juegan?</p>
+    <p class="etiqueta" data-i="famJuegan">¿Qué familias juegan?</p>
     <div class="selector-fam" id="selFam"></div>
     <p class="ayuda" id="ayudaSolo" style="margin-top:12px"></p>
   </div>
   <div class="tarjeta">
-    <p class="etiqueta">Jugadores en orden de turno final</p>
+    <p class="etiqueta" data-i="ordenTurno">Jugadores en orden de turno final</p>
     <div id="listaJugadores"></div>
-    <p class="ayuda">Ordénalos según el orden de turno al acabar la 5.ª ronda (tras la Cabaña del Alquimista). Sirve para el desempate. Toca la rata para verla en grande.</p>
+    <p class="ayuda" data-i="ayudaOrden">Ordénalos según el orden de turno al acabar la 5.ª ronda (tras la Cabaña del Alquimista). Sirve para el desempate. Toca la rata para verla en grande.</p>
   </div>
   <div style="margin-top:16px">
-    <button class="btn btn-queso" id="btnEmpezar"><img class="ico-btn" src="iconos/menu/nueva.svg" alt="">¡A contar queso!</button>
+    <button class="btn btn-queso" id="btnEmpezar"><img class="ico-btn" src="iconos/menu/nueva.svg" alt=""><span data-i="aContar">¡A contar queso!</span></button>
   </div>
 </section>
 
 <!-- ============ PUNTUACIÓN ============ -->
 <section id="puntuar" class="pantalla">
   <div class="cabecera">
-    <button class="icono-btn" id="btnSalirPunt" aria-label="Menú"><img class="ico-cab" src="iconos/menu/madriguera.svg" alt=""></button>
-    <h2>Recuento</h2>
-    <button class="icono-btn" id="btnTabla" aria-label="Ver resumen"><img class="ico-cab" src="iconos/menu/resumen.svg" alt=""></button>
+    <button class="icono-btn" id="btnSalirPunt" data-ia="menu" aria-label="Menú"><img class="ico-cab" src="iconos/menu/madriguera.svg" alt=""></button>
+    <h2 data-i="recuento">Recuento</h2>
+    <button class="icono-btn" id="btnTabla" data-ia="verResumen" aria-label="Ver resumen"><img class="ico-cab" src="iconos/menu/resumen.svg" alt=""></button>
   </div>
   <div class="marcador-vivo" id="marcador"></div>
   <div class="progreso" id="progreso"></div>
@@ -397,16 +411,16 @@ img.avatar[data-fam]{cursor:zoom-in;-webkit-touch-callout:none;-webkit-user-sele
     <div id="catFilas"></div>
   </div>
   <div class="nav-cat">
-    <button class="btn btn-claro" id="btnAnt">← Atrás</button>
-    <button class="btn btn-queso" id="btnSig">Siguiente →</button>
+    <button class="btn btn-claro" id="btnAnt" data-i="atras">← Atrás</button>
+    <button class="btn btn-queso" id="btnSig" data-i="siguiente">Siguiente →</button>
   </div>
 </section>
 
 <!-- ============ RESULTADOS ============ -->
 <section id="resultados" class="pantalla">
   <div class="cabecera">
-    <button class="icono-btn" id="btnEditar" aria-label="Editar puntos"><img class="ico-cab" src="iconos/menu/editar.svg" alt=""></button>
-    <h2>¡Fin del reto!</h2>
+    <button class="icono-btn" id="btnEditar" data-ia="editarPuntos" aria-label="Editar puntos"><img class="ico-cab" src="iconos/menu/editar.svg" alt=""></button>
+    <h2 data-i="finReto">¡Fin del reto!</h2>
   </div>
   <div class="podio" id="podio"></div>
   <div class="tarjeta">
@@ -414,17 +428,17 @@ img.avatar[data-fam]{cursor:zoom-in;-webkit-touch-callout:none;-webkit-user-sele
     <p class="desempate" id="txtDesempate"></p>
   </div>
   <div class="pila" style="margin-top:16px">
-    <button class="btn btn-queso" id="btnGuardar"><img class="ico-btn" src="iconos/menu/guardar.svg" alt="">Guardar y volver al menú</button>
-    <button class="btn btn-claro" id="btnRevancha"><img class="ico-btn" src="iconos/menu/revancha.svg" alt="">Revancha (mismos jugadores)</button>
+    <button class="btn btn-queso" id="btnGuardar"><img class="ico-btn" src="iconos/menu/guardar.svg" alt=""><span data-i="guardarVolver">Guardar y volver al menú</span></button>
+    <button class="btn btn-claro" id="btnRevancha"><img class="ico-btn" src="iconos/menu/revancha.svg" alt=""><span data-i="revancha">Revancha (mismos jugadores)</span></button>
   </div>
 </section>
 
 <!-- ============ HISTORIAL ============ -->
 <section id="historial" class="pantalla">
   <div class="cabecera">
-    <button class="icono-btn" data-volver="menu" aria-label="Volver"><img class="ico-cab" src="iconos/menu/volver.svg" alt=""></button>
-    <h2>Historial</h2>
-    <button class="icono-btn" id="btnBorrarHist" aria-label="Borrar historial"><img class="ico-cab" src="iconos/menu/borrar.svg" alt=""></button>
+    <button class="icono-btn" data-volver="menu" data-ia="volver" aria-label="Volver"><img class="ico-cab" src="iconos/menu/volver.svg" alt=""></button>
+    <h2 data-i="historial">Historial</h2>
+    <button class="icono-btn" id="btnBorrarHist" data-ia="borrarHist" aria-label="Borrar historial"><img class="ico-cab" src="iconos/menu/borrar.svg" alt=""></button>
   </div>
   <div id="listaHist" class="pila"></div>
 </section>
@@ -439,24 +453,24 @@ img.avatar[data-fam]{cursor:zoom-in;-webkit-touch-callout:none;-webkit-user-sele
     <path d="M24 42 L40 33 L36 29 L24 36 Z" fill="#ffd34d" stroke="#3a2414" stroke-width="1.6" stroke-linejoin="round"/>
   </svg>
   <img class="gi-rata" src="iconos/familias/mini/rojo.webp" alt="">
-  <h2>¡Ponme de pie!</h2>
-  <p>Este contador funciona solo en vertical.<br>Gira el móvil para seguir contando queso.</p>
+  <h2 data-i="girarT">¡Ponme de pie!</h2>
+  <p data-ih="girarP">Este contador funciona solo en vertical.<br>Gira el móvil para seguir contando queso.</p>
 </div>
 
 <!-- ============ FICHA DE PERSONAJE ============ -->
-<div id="zoomRata" role="dialog" aria-modal="true" aria-label="Personaje">
+<div id="zoomRata" role="dialog" aria-modal="true" data-ia="personaje" aria-label="Personaje">
   <div class="zr-rayos"></div>
   <div class="zr-caja">
     <img class="zr-img" id="zrImg" alt="">
     <div class="zr-rol" id="zrRol"></div>
     <div class="zr-fam" id="zrFam"></div>
     <p class="zr-desc" id="zrDesc"></p>
-    <div class="zr-toca">Toca para cerrar</div>
+    <div class="zr-toca" data-i="tocaCerrar">Toca para cerrar</div>
   </div>
 </div>
 
 <!-- ============ VICTORIA ============ -->
-<div id="victoria" role="dialog" aria-label="Ganador de la partida">
+<div id="victoria" role="dialog" data-ia="vicAria" aria-label="Ganador de la partida">
   <div class="rayos"></div>
   <div class="confeti" id="confeti"></div>
   <div class="medallon" id="vicMedallon"><img class="vic-corona" src="iconos/menu/corona.svg" alt=""></div>
@@ -464,15 +478,15 @@ img.avatar[data-fam]{cursor:zoom-in;-webkit-touch-callout:none;-webkit-user-sele
   <div class="vic-nombre" id="vicNombre"></div>
   <div class="vic-pv"><img src="iconos/menu/nueva.svg" alt=""><span id="vicPv"></span></div>
   <div class="vic-frase" id="vicFrase"></div>
-  <div class="vic-toca">Toca para ver el podio</div>
+  <div class="vic-toca" data-i="vicToca">Toca para ver el podio</div>
 </div>
 
 <!-- ============ MODALES ============ -->
 <div class="modal" id="modalAyuda">
   <div class="tarjeta">
-    <h3><img class="ico-btn" src="iconos/menu/ayuda.svg" alt="" style="vertical-align:-8px;margin-right:6px">Puntuación final</h3>
-    <p class="ayuda">Al acabar la 5.ª ronda se suman a los PV del marcador:</p>
-    <ul>
+    <h3><img class="ico-btn" src="iconos/menu/ayuda.svg" alt="" style="vertical-align:-8px;margin-right:6px"><span data-i="ayudaTitulo">Puntuación final</span></h3>
+    <p class="ayuda" data-i="ayudaIntro">Al acabar la 5.ª ronda se suman a los PV del marcador:</p>
+    <ul id="ayudaLista">
       <li>PV de los espacios de <b>habilidad</b> de tu tablero de los que retiraste cubo (+2 si completas la pareja que lo indica).</li>
       <li>PV del espacio de <b>cama</b> de mayor valor que hayas descubierto.</li>
       <li>PV de la <b>habitación</b> de mayor valor excavada (esté ocupada o no).</li>
@@ -483,8 +497,8 @@ img.avatar[data-fam]{cursor:zoom-in;-webkit-touch-callout:none;-webkit-user-sele
       <li><b>1 PV por cada 5</b> elementos entre madera, metal, fichas de movimiento y cartas de invento en mano.</li>
       <li><b>1 PV por cada 2</b> fichas de comodín.</li>
     </ul>
-    <p class="ayuda" style="margin:14px 0 18px"><b>Desempate:</b> gana quien vaya antes en el orden de turno.</p>
-    <button class="btn btn-queso" data-cerrar>Entendido</button>
+    <p class="ayuda" style="margin:14px 0 18px" data-ih="ayudaDesempate"><b>Desempate:</b> gana quien vaya antes en el orden de turno.</p>
+    <button class="btn btn-queso" data-cerrar data-i="entendido">Entendido</button>
   </div>
 </div>
 <div class="modal" id="modalConfirm">
@@ -493,8 +507,14 @@ img.avatar[data-fam]{cursor:zoom-in;-webkit-touch-callout:none;-webkit-user-sele
     <p class="ayuda" id="confTexto" style="font-size:15px;margin-bottom:16px"></p>
     <div class="pila">
       <button class="btn btn-queso" id="confSi">Sí</button>
-      <button class="btn btn-linea" data-cerrar>Cancelar</button>
+      <button class="btn btn-linea" data-cerrar data-i="cancelar">Cancelar</button>
     </div>
+  </div>
+</div>
+<div class="modal" id="modalIdioma">
+  <div class="tarjeta">
+    <h3><img class="ico-btn" src="iconos/menu/idioma.svg" alt="" style="vertical-align:-8px;margin-right:6px"><span data-i="idioma">Idioma</span></h3>
+    <div class="pila" id="listaIdiomas" style="margin-top:12px"></div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -511,7 +531,396 @@ const LICENCIA = {
   urlCompra: 'https://buymeacoffee.com/pentech/e/594627',
   partidasPrueba: 3
 };
-const TEXTO_LEGAL = `Contador no oficial creado por <b>PenTech</b>. <i>Rats of Wistar</i> es un juego de Simone Luciani y Danilo Sabia, editado por Cranio Creations y en España por <b>Maldito Games</b>. Esta app no está afiliada ni respaldada por los editores ni por el Wistar Institute.`;
+
+/* =====================================================
+   IDIOMAS · ES (base), EN, FR, DE, IT
+   Términos de las reglas oficiales. Para añadir un idioma: copia
+   el bloque 'es', tradúcelo y añádelo a IDIOMAS.
+   ===================================================== */
+const IDIOMAS = [
+  {id:'es', nom:'Español'}, {id:'en', nom:'English'}, {id:'fr', nom:'Français'},
+  {id:'de', nom:'Deutsch'}, {id:'it', nom:'Italiano'}
+];
+const T = {
+es: {
+  locale:'es-ES', pv:'PV', titulo:'Contador Ratas de Wistar', marca:'Ratas de Wistar · Contador',
+  tocaEmpezar:'Toca para empezar', splashAria:'Ratas de Wistar · Contador. Toca para empezar',
+  colores:{azul:'Azul', rojo:'Roja', amarillo:'Amarilla', blanco:'Blanca'},
+  famDef:c=>`Familia ${c}`,
+  legal:`Contador no oficial creado por <b>PenTech</b>. <i>Rats of Wistar</i> es un juego de Simone Luciani y Danilo Sabia, editado por Cranio Creations y en España por <b>Maldito Games</b>. Esta app no está afiliada ni respaldada por los editores ni por el Wistar Institute.`,
+  idioma:'Idioma', acceso:'Acceso', tienesClave:'¿Tienes la clave?',
+  introClave:'Introduce tu clave de licencia para desbloquear el contador sin límites.',
+  phClave:'TU CLAVE', yaCompraste:'<b>¿Ya la compraste?</b> Tu clave está en el email de confirmación de Buy Me a Coffee.',
+  desbloquear:'Desbloquear', comprar:'Comprar clave', probar:'Probar gratis',
+  pruebaPuedes:r=>`Puedes probar el contador gratis durante ${r} ${r===1?'partida':'partidas'}.`,
+  pruebaAgotada:'Ya has agotado las partidas de prueba. ¡Hazte con la clave para seguir contando!',
+  modoPrueba:r=>`Modo prueba: te quedan ${r} ${r===1?'partida':'partidas'}.`,
+  claveOk:'¡Clave correcta! Contador desbloqueado 🧀', claveMal:'Esa clave huele a queso caducado. Revísala.',
+  silenciar:'Silenciar', activarSonido:'Activar sonido',
+  subtitulo:'Recuento final de la colonia', nueva:'Nueva partida', continuar:'Continuar partida',
+  historial:'Historial', comoPuntua:'Cómo se puntúa', volver:'Volver', menu:'Menú', verResumen:'Ver resumen',
+  famJuegan:'¿Qué familias juegan?', ordenTurno:'Jugadores en orden de turno final',
+  ayudaOrden:'Ordénalos según el orden de turno al acabar la 5.ª ronda (tras la Cabaña del Alquimista). Sirve para el desempate. Toca la rata para verla en grande.',
+  aContar:'¡A contar queso!', soloModo:'Modo solitario: anota tus puntos e intenta batir tu propio récord.',
+  tocaFam:n=>`Toca las familias para añadirlas o quitarlas · ${n} jugadores`,
+  minFam:'Tiene que jugar al menos una familia 🐀', subir:'Subir', bajar:'Bajar',
+  empezarCero:'¿Empezar de cero?', empezarCeroTxt:'Hay una partida a medias. Si empiezas otra, se perderá.',
+  recuento:'Recuento', atras:'← Atrás', siguiente:'Siguiente →', resultados:'🏆 Resultados',
+  restar:'Restar', sumar:'Sumar', catDe:(c,n)=>`${c} de ${n}`,
+  partidaGuardada:'Partida guardada. Puedes continuarla cuando quieras.',
+  editarPuntos:'Editar puntos', finReto:'¡Fin del reto!', guardarVolver:'Guardar y volver al menú',
+  revancha:'Revancha (mismos jugadores)', seguirContando:'Seguir contando', ganador:'Ganador',
+  total:'Total', de:n=>`de ${n}`,
+  empate:(pv,n)=>`Empate a ${pv} PV: gana ${n} por ir antes en el orden de turno.`,
+  gana:(n,d)=>`${n} gana por ${d} PV de ventaja.`,
+  guardadaHist:'Partida guardada en el historial 📜',
+  borrarHist:'Borrar historial', histVacio:'🐀💤<br>Aún no hay partidas guardadas.<br>¡La colonia espera!',
+  borrarHistT:'¿Borrar historial?', borrarHistTxt:'Se eliminarán todas las partidas guardadas. No hay vuelta atrás (ni con la poción del Alquimista).',
+  borrar:'Borrar', histBorrado:'Historial borrado',
+  girarT:'¡Ponme de pie!', girarP:'Este contador funciona solo en vertical.<br>Gira el móvil para seguir contando queso.',
+  personaje:'Personaje', tocaCerrar:'Toca para cerrar',
+  vicAria:'Ganador de la partida', vicLider:'Nuevo líder de la colonia', vicSolo:'Fin del reto en solitario',
+  vicEmpate:'Victoria por orden de turno', vicToca:'Toca para ver el podio', vicSoloFrase:'¿Superarás tu récord la próxima vez?',
+  frases:['¡Todo el queso de la despensa es tuyo!','¡Ni el gato de la granja ha podido contigo!','¡El Alquimista brinda a tu salud!',
+    '¡La madriguera más ordenada del bosque!','¡Wistar nunca vio una rata tan lista!','¡Tus inventos son la envidia de la colonia!',
+    '¡Camas hechas, misiones resueltas y a dormir!'],
+  ayudaTitulo:'Puntuación final', ayudaIntro:'Al acabar la 5.ª ronda se suman a los PV del marcador:',
+  ayudaLista:['PV de los espacios de <b>habilidad</b> de tu tablero de los que retiraste cubo (+2 si completas la pareja que lo indica).',
+    'PV del espacio de <b>cama</b> de mayor valor que hayas descubierto.',
+    'PV de la <b>habitación</b> de mayor valor excavada (esté ocupada o no).',
+    'PV de los <b>ratones invitados</b> de tu tablero (incluido el queso, que vale 6).',
+    'PV impresos en tus <b>inventos</b> jugados.',
+    'PV de los inventos con <b>efecto de final de partida</b>.',
+    '<b>2 PV</b> si tienes la <b>electricidad avanzada</b>.',
+    '<b>1 PV por cada 5</b> elementos entre madera, metal, fichas de movimiento y cartas de invento en mano.',
+    '<b>1 PV por cada 2</b> fichas de comodín.'],
+  ayudaDesempate:'<b>Desempate:</b> gana quien vaya antes en el orden de turno.', entendido:'Entendido',
+  si:'Sí', cancelar:'Cancelar',
+  cat:{
+    marcador:['PV del marcador','Marcador','Los puntos de victoria que lleváis en el marcador del tablero tras la 5.ª ronda.'],
+    habilidades:['Habilidades','Habilidades','Suma los PV impresos en los espacios de habilidad de tu tablero de los que has retirado un cubo (los cubos que colocaste en las misiones). Ojo: si retiraste los dos cubos de la pareja que lo indica, suma 2 PV extra.'],
+    camas:['Camas','Camas','PV del espacio de mayor valor de tu tablero del que hayas retirado una loseta de cama. Solo cuenta el más alto.'],
+    habitaciones:['Habitaciones','Habitaciones','PV de la habitación de mayor valor de la que hayas retirado la loseta subterránea. Cuenta aunque la habitación esté vacía.'],
+    invitados:['Ratones invitados','Invitados','Suma los PV de las losetas de ratón invitado de tu tablero (de 0 a 3 cada una), incluida la loseta de queso si la tienes (vale 6 PV).'],
+    inventos:['Inventos','Inventos','Suma los PV impresos en las cartas de invento que tienes jugadas en tu zona de juego.'],
+    finales:['Inventos de final','Ef. final','PV que te dan los inventos jugados con efecto de final de partida.'],
+    electricidad:['Electricidad avanzada','Electricidad','¿Tienes la ficha de electricidad avanzada? Vale 2 PV.'],
+    recursos:['Recursos sobrantes','Recursos','Cuenta tus maderas, metales, fichas de movimiento y cartas de invento en la mano, todo junto. Cada 5 elementos = 1 PV. ¡Yo hago la división!'],
+    comodines:['Comodines','Comodines','Cuenta tus fichas de comodín. Cada 2 comodines = 1 PV.']
+  },
+  per:{
+    azul:['El Científico','Gafas redondas, lápiz en la oreja y planos bajo el brazo. Nada sale de la madriguera sin pasar por sus cálculos.'],
+    rojo:['La Inventora','Gafas de aviadora y una bombilla siempre encendida: cada idea suya acaba convertida en un invento.'],
+    amarillo:['La Soldadora','Careta, guantes y llave inglesa. Si algo cruje, se suelta o echa humo, ella lo deja como nuevo.'],
+    blanco:['El Explorador','Linterna, brújula y mochila a la espalda: no queda rincón de la granja que no haya olfateado.']
+  }
+},
+en: {
+  locale:'en-GB', pv:'VP', titulo:'Rats of Wistar Scorepad', marca:'Rats of Wistar · Scorepad',
+  tocaEmpezar:'Tap to start', splashAria:'Rats of Wistar · Scorepad. Tap to start',
+  colores:{azul:'Blue', rojo:'Red', amarillo:'Yellow', blanco:'White'},
+  famDef:c=>`${c} Family`,
+  legal:`Unofficial scorepad made by <b>PenTech</b>. <i>Rats of Wistar</i> is a game by Simone Luciani and Danilo Sabia, published by <b>Cranio Creations</b>. This app is not affiliated with or endorsed by the publishers or the Wistar Institute.`,
+  idioma:'Language', acceso:'Access', tienesClave:'Got your key?',
+  introClave:'Enter your licence key to unlock the scorepad with no limits.',
+  phClave:'YOUR KEY', yaCompraste:'<b>Already bought it?</b> Your key is in the Buy Me a Coffee confirmation email.',
+  desbloquear:'Unlock', comprar:'Buy a key', probar:'Try it free',
+  pruebaPuedes:r=>`You can try the scorepad for free for ${r} ${r===1?'game':'games'}.`,
+  pruebaAgotada:'You have used up your trial games. Get the key to keep counting!',
+  modoPrueba:r=>`Trial mode: ${r} ${r===1?'game':'games'} left.`,
+  claveOk:'Correct key! Scorepad unlocked 🧀', claveMal:'That key smells like mouldy cheese. Check it again.',
+  silenciar:'Mute', activarSonido:'Turn sound on',
+  subtitulo:'Final colony scoring', nueva:'New game', continuar:'Continue game',
+  historial:'History', comoPuntua:'How scoring works', volver:'Back', menu:'Menu', verResumen:'View summary',
+  famJuegan:'Which families are playing?', ordenTurno:'Players in final turn order',
+  ayudaOrden:'Sort them by turn order at the end of round 5 (after the Alchemist’s Hut). It breaks ties. Tap a rat to see it up close.',
+  aContar:'Let’s count the cheese!', soloModo:'Solo mode: enter your points and try to beat your own record.',
+  tocaFam:n=>`Tap the families to add or remove them · ${n} players`,
+  minFam:'At least one family has to play 🐀', subir:'Move up', bajar:'Move down',
+  empezarCero:'Start from scratch?', empezarCeroTxt:'There is a game in progress. If you start a new one, it will be lost.',
+  recuento:'Scoring', atras:'← Back', siguiente:'Next →', resultados:'🏆 Results',
+  restar:'Subtract', sumar:'Add', catDe:(c,n)=>`${c} for ${n}`,
+  partidaGuardada:'Game saved. You can continue it whenever you like.',
+  editarPuntos:'Edit points', finReto:'Game over!', guardarVolver:'Save and back to menu',
+  revancha:'Rematch (same players)', seguirContando:'Keep counting', ganador:'Winner',
+  total:'Total', de:n=>`of ${n}`,
+  empate:(pv,n)=>`Tied on ${pv} VP: ${n} wins for being earlier in turn order.`,
+  gana:(n,d)=>`${n} wins by ${d} VP.`,
+  guardadaHist:'Game saved to history 📜',
+  borrarHist:'Clear history', histVacio:'🐀💤<br>No saved games yet.<br>The colony is waiting!',
+  borrarHistT:'Clear history?', borrarHistTxt:'All saved games will be deleted. There’s no going back (not even with the Alchemist’s Potion).',
+  borrar:'Clear', histBorrado:'History cleared',
+  girarT:'Stand me up!', girarP:'This scorepad only works in portrait.<br>Turn your phone to keep counting cheese.',
+  personaje:'Character', tocaCerrar:'Tap to close',
+  vicAria:'Game winner', vicLider:'New leader of the colony', vicSolo:'Solo challenge complete',
+  vicEmpate:'Victory on turn order', vicToca:'Tap to see the podium', vicSoloFrase:'Will you beat your record next time?',
+  frases:['All the cheese in the pantry is yours!','Not even the farm cat could stop you!','The Alchemist raises a toast to you!',
+    'The tidiest lair in the whole Forest!','Wistar never saw such a clever rat!','Your Inventions are the envy of the colony!',
+    'Beds built, Missions solved, time for bed!'],
+  ayudaTitulo:'Final scoring', ayudaIntro:'At the end of round 5, add to the VP on the track:',
+  ayudaLista:['VP of the <b>Skill</b> spaces on your Player Board you removed a Cube from (+2 if you complete the indicated pair).',
+    'VP of the highest-value <b>Bed</b> space you uncovered.',
+    'VP of the highest-value <b>Room</b> you dug (occupied or not).',
+    'VP of the <b>Guest Mice</b> on your Player Board (including the Cheese, worth 6).',
+    'VP printed on your played <b>Inventions</b>.',
+    'VP from Inventions with an <b>end-game effect</b>.',
+    '<b>2 VP</b> if you have <b>Advanced Electricity</b>.',
+    '<b>1 VP for every 5</b> items among Wood, Metal, Movement tokens and Invention cards in hand.',
+    '<b>1 VP for every 2</b> Joker tokens.'],
+  ayudaDesempate:'<b>Tiebreaker:</b> the player earliest in turn order wins.', entendido:'Got it',
+  si:'Yes', cancelar:'Cancel',
+  cat:{
+    marcador:['VP track','VP track','The victory points you have on the Board’s VP track after round 5.'],
+    habilidades:['Skills','Skills','Add the VP printed on the Skill spaces of your Player Board you removed a Cube from (the Cubes you placed on Missions). Note: if you removed both Cubes of the indicated pair, add 2 extra VP.'],
+    camas:['Beds','Beds','VP of the highest-value space on your Player Board you removed a Bed tile from. Only the highest one counts.'],
+    habitaciones:['Rooms','Rooms','VP of the highest-value Room you removed the Underground tile from. It counts even if the Room is empty.'],
+    invitados:['Guest Mice','Guests','Add the VP of the Guest Mouse tiles on your Player Board (0 to 3 each), including the Cheese tile if you have it (worth 6 VP).'],
+    inventos:['Inventions','Inventions','Add the VP printed on the Invention cards you have played in your play area.'],
+    finales:['End-game Inventions','End-game','VP from your played Inventions with an end-game effect.'],
+    electricidad:['Advanced Electricity','Electricity','Do you have the Advanced Electricity token? It’s worth 2 VP.'],
+    recursos:['Leftover resources','Resources','Count your Wood, Metal, Movement tokens and Invention cards in hand, all together. Every 5 items = 1 VP. I’ll do the maths!'],
+    comodines:['Jokers','Jokers','Count your Joker tokens. Every 2 Jokers = 1 VP.']
+  },
+  per:{
+    azul:['The Scientist','Round glasses, a pencil behind his ear and blueprints under his arm. Nothing leaves the lair without passing his calculations.'],
+    rojo:['The Inventor','Aviator goggles and a light bulb that is always on: every idea of hers ends up as an Invention.'],
+    amarillo:['The Welder','Mask, gloves and a spanner. If something creaks, comes loose or smokes, she makes it good as new.'],
+    blanco:['The Explorer','Torch, compass and a backpack: there isn’t a corner of the Farm he hasn’t sniffed out.']
+  }
+},
+fr: {
+  locale:'fr-FR', pv:'PV', titulo:'Compteur Rats of Wistar', marca:'Rats of Wistar · Compteur',
+  tocaEmpezar:'Touchez pour commencer', splashAria:'Rats of Wistar · Compteur. Touchez pour commencer',
+  colores:{azul:'Bleue', rojo:'Rouge', amarillo:'Jaune', blanco:'Blanche'},
+  famDef:c=>`Famille ${c}`,
+  legal:`Compteur non officiel créé par <b>PenTech</b>. <i>Rats of Wistar</i> est un jeu de Simone Luciani et Danilo Sabia, édité par <b>Cranio Creations</b>. Cette application n’est ni affiliée ni approuvée par les éditeurs ou le Wistar Institute.`,
+  idioma:'Langue', acceso:'Accès', tienesClave:'Vous avez la clé ?',
+  introClave:'Saisissez votre clé de licence pour débloquer le compteur sans limite.',
+  phClave:'VOTRE CLÉ', yaCompraste:'<b>Déjà achetée ?</b> Votre clé se trouve dans l’e-mail de confirmation de Buy Me a Coffee.',
+  desbloquear:'Débloquer', comprar:'Acheter une clé', probar:'Essayer gratuitement',
+  pruebaPuedes:r=>`Vous pouvez essayer le compteur gratuitement pendant ${r} ${r===1?'partie':'parties'}.`,
+  pruebaAgotada:'Vous avez épuisé les parties d’essai. Procurez-vous la clé pour continuer à compter !',
+  modoPrueba:r=>`Mode essai : il vous reste ${r} ${r===1?'partie':'parties'}.`,
+  claveOk:'Clé correcte ! Compteur débloqué 🧀', claveMal:'Cette clé sent le fromage périmé. Vérifiez-la.',
+  silenciar:'Couper le son', activarSonido:'Activer le son',
+  subtitulo:'Décompte final de la colonie', nueva:'Nouvelle partie', continuar:'Reprendre la partie',
+  historial:'Historique', comoPuntua:'Comment compter', volver:'Retour', menu:'Menu', verResumen:'Voir le résumé',
+  famJuegan:'Quelles familles jouent ?', ordenTurno:'Joueurs dans l’ordre du tour final',
+  ayudaOrden:'Classez-les selon l’ordre du tour à la fin de la 5e manche (après la Cabane de l’Alchimiste). Il sert à départager. Touchez un rat pour l’agrandir.',
+  aContar:'Comptons le fromage !', soloModo:'Mode solo : notez vos points et essayez de battre votre record.',
+  tocaFam:n=>`Touchez les familles pour les ajouter ou les retirer · ${n} joueurs`,
+  minFam:'Au moins une famille doit jouer 🐀', subir:'Monter', bajar:'Descendre',
+  empezarCero:'Repartir de zéro ?', empezarCeroTxt:'Une partie est en cours. Si vous en commencez une autre, elle sera perdue.',
+  recuento:'Décompte', atras:'← Retour', siguiente:'Suivant →', resultados:'🏆 Résultats',
+  restar:'Retirer', sumar:'Ajouter', catDe:(c,n)=>`${c} de ${n}`,
+  partidaGuardada:'Partie enregistrée. Vous pourrez la reprendre quand vous voudrez.',
+  editarPuntos:'Modifier les points', finReto:'Fin de la partie !', guardarVolver:'Enregistrer et revenir au menu',
+  revancha:'Revanche (mêmes joueurs)', seguirContando:'Continuer à compter', ganador:'Gagnant',
+  total:'Total', de:n=>`sur ${n}`,
+  empate:(pv,n)=>`Égalité à ${pv} PV : ${n} l’emporte car il joue plus tôt dans l’ordre du tour.`,
+  gana:(n,d)=>`${n} l’emporte avec ${d} PV d’avance.`,
+  guardadaHist:'Partie enregistrée dans l’historique 📜',
+  borrarHist:'Effacer l’historique', histVacio:'🐀💤<br>Aucune partie enregistrée.<br>La colonie vous attend !',
+  borrarHistT:'Effacer l’historique ?', borrarHistTxt:'Toutes les parties enregistrées seront supprimées. Aucun retour possible (même avec la potion de l’Alchimiste).',
+  borrar:'Effacer', histBorrado:'Historique effacé',
+  girarT:'Redressez-moi !', girarP:'Ce compteur ne fonctionne qu’en mode portrait.<br>Tournez votre téléphone pour continuer à compter le fromage.',
+  personaje:'Personnage', tocaCerrar:'Touchez pour fermer',
+  vicAria:'Gagnant de la partie', vicLider:'Nouveau chef de la colonie', vicSolo:'Défi solo terminé',
+  vicEmpate:'Victoire à l’ordre du tour', vicToca:'Touchez pour voir le podium', vicSoloFrase:'Battrez-vous votre record la prochaine fois ?',
+  frases:['Tout le fromage du garde-manger est à vous !','Même le chat de la ferme n’a rien pu faire !','L’Alchimiste lève son verre à votre santé !',
+    'Le terrier le mieux rangé de la forêt !','Wistar n’a jamais vu un rat aussi malin !','Vos inventions font des envieux dans la colonie !',
+    'Lits construits, missions accomplies, au dodo !'],
+  ayudaTitulo:'Décompte final', ayudaIntro:'À la fin de la 5e manche, ajoutez aux PV de la piste :',
+  ayudaLista:['Les PV des cases de <b>compétence</b> de votre plateau dont vous avez retiré un cube (+2 si vous complétez la paire indiquée).',
+    'Les PV de la case de <b>lit</b> de plus grande valeur que vous avez découverte.',
+    'Les PV de la <b>salle</b> de plus grande valeur creusée (occupée ou non).',
+    'Les PV des <b>souris invitées</b> de votre plateau (y compris le fromage, qui vaut 6).',
+    'Les PV imprimés sur vos <b>inventions</b> jouées.',
+    'Les PV des inventions à <b>effet de fin de partie</b>.',
+    '<b>2 PV</b> si vous avez l’<b>électricité avancée</b>.',
+    '<b>1 PV pour 5</b> éléments parmi bois, métal, jetons mouvement et cartes invention en main.',
+    '<b>1 PV pour 2</b> jetons joker.'],
+  ayudaDesempate:'<b>Égalité :</b> le joueur placé le plus tôt dans l’ordre du tour l’emporte.', entendido:'Compris',
+  si:'Oui', cancelar:'Annuler',
+  cat:{
+    marcador:['PV de la piste','Piste','Les points de victoire que vous avez sur la piste de PV du plateau après la 5e manche.'],
+    habilidades:['Compétences','Compétences','Additionnez les PV imprimés sur les cases de compétence de votre plateau dont vous avez retiré un cube (les cubes placés sur les missions). Attention : si vous avez retiré les deux cubes de la paire indiquée, ajoutez 2 PV.'],
+    camas:['Lits','Lits','Les PV de la case de plus grande valeur de votre plateau dont vous avez retiré une tuile lit. Seule la plus haute compte.'],
+    habitaciones:['Salles','Salles','Les PV de la salle de plus grande valeur dont vous avez retiré la tuile souterraine. Elle compte même si la salle est vide.'],
+    invitados:['Souris invitées','Invitées','Additionnez les PV des tuiles souris invitée de votre plateau (de 0 à 3 chacune), y compris la tuile fromage si vous l’avez (6 PV).'],
+    inventos:['Inventions','Inventions','Additionnez les PV imprimés sur les cartes invention que vous avez jouées dans votre zone de jeu.'],
+    finales:['Inventions de fin','Fin partie','Les PV de vos inventions jouées avec un effet de fin de partie.'],
+    electricidad:['Électricité avancée','Électricité','Avez-vous le jeton électricité avancée ? Il vaut 2 PV.'],
+    recursos:['Ressources restantes','Ressources','Comptez ensemble vos bois, métaux, jetons mouvement et cartes invention en main. Tous les 5 éléments = 1 PV. Je fais la division !'],
+    comodines:['Jokers','Jokers','Comptez vos jetons joker. Tous les 2 jokers = 1 PV.']
+  },
+  per:{
+    azul:['Le Scientifique','Lunettes rondes, crayon sur l’oreille et plans sous le bras. Rien ne sort du terrier sans passer par ses calculs.'],
+    rojo:['L’Inventrice','Lunettes d’aviatrice et une ampoule toujours allumée : chacune de ses idées finit en invention.'],
+    amarillo:['La Soudeuse','Masque, gants et clé à molette. Si quelque chose grince, se détache ou fume, elle le remet à neuf.'],
+    blanco:['L’Explorateur','Lampe torche, boussole et sac à dos : il n’y a pas un recoin de la ferme qu’il n’ait flairé.']
+  }
+},
+de: {
+  locale:'de-DE', pv:'SP', titulo:'Rats of Wistar Punktezähler', marca:'Rats of Wistar · Punktezähler',
+  tocaEmpezar:'Zum Starten tippen', splashAria:'Rats of Wistar · Punktezähler. Zum Starten tippen',
+  colores:{azul:'Blau', rojo:'Rot', amarillo:'Gelb', blanco:'Weiß'},
+  famDef:c=>`Familie ${c}`,
+  legal:`Inoffizieller Punktezähler von <b>PenTech</b>. <i>Rats of Wistar</i> ist ein Spiel von Simone Luciani und Danilo Sabia, erschienen bei <b>Cranio Creations</b>. Diese App steht in keiner Verbindung zu den Verlagen oder dem Wistar Institute und wird nicht von ihnen unterstützt.`,
+  idioma:'Sprache', acceso:'Zugang', tienesClave:'Hast du den Schlüssel?',
+  introClave:'Gib deinen Lizenzschlüssel ein, um den Zähler ohne Limit freizuschalten.',
+  phClave:'DEIN SCHLÜSSEL', yaCompraste:'<b>Schon gekauft?</b> Dein Schlüssel steht in der Bestätigungs-E-Mail von Buy Me a Coffee.',
+  desbloquear:'Freischalten', comprar:'Schlüssel kaufen', probar:'Kostenlos testen',
+  pruebaPuedes:r=>`Du kannst den Zähler ${r} ${r===1?'Partie':'Partien'} lang kostenlos testen.`,
+  pruebaAgotada:'Deine Testpartien sind aufgebraucht. Hol dir den Schlüssel, um weiterzuzählen!',
+  modoPrueba:r=>`Testmodus: noch ${r} ${r===1?'Partie':'Partien'}.`,
+  claveOk:'Richtiger Schlüssel! Zähler freigeschaltet 🧀', claveMal:'Dieser Schlüssel riecht nach verdorbenem Käse. Prüf ihn nochmal.',
+  silenciar:'Stumm schalten', activarSonido:'Ton einschalten',
+  subtitulo:'Schlusswertung der Kolonie', nueva:'Neue Partie', continuar:'Partie fortsetzen',
+  historial:'Verlauf', comoPuntua:'So wird gewertet', volver:'Zurück', menu:'Menü', verResumen:'Übersicht',
+  famJuegan:'Welche Familien spielen?', ordenTurno:'Spieler in finaler Spielreihenfolge',
+  ayudaOrden:'Sortiere sie nach der Spielreihenfolge am Ende der 5. Runde (nach der Hütte des Alchemisten). Sie entscheidet bei Gleichstand. Tippe auf eine Ratte, um sie groß zu sehen.',
+  aContar:'Käse zählen!', soloModo:'Solomodus: Trag deine Punkte ein und versuch, deinen Rekord zu schlagen.',
+  tocaFam:n=>`Tippe auf die Familien, um sie hinzuzufügen oder zu entfernen · ${n} Spieler`,
+  minFam:'Mindestens eine Familie muss spielen 🐀', subir:'Nach oben', bajar:'Nach unten',
+  empezarCero:'Von vorn beginnen?', empezarCeroTxt:'Es läuft noch eine Partie. Wenn du eine neue beginnst, geht sie verloren.',
+  recuento:'Wertung', atras:'← Zurück', siguiente:'Weiter →', resultados:'🏆 Ergebnis',
+  restar:'Weniger', sumar:'Mehr', catDe:(c,n)=>`${c} von ${n}`,
+  partidaGuardada:'Partie gespeichert. Du kannst sie jederzeit fortsetzen.',
+  editarPuntos:'Punkte bearbeiten', finReto:'Partie vorbei!', guardarVolver:'Speichern und zum Menü',
+  revancha:'Revanche (gleiche Spieler)', seguirContando:'Weiterzählen', ganador:'Sieger',
+  total:'Gesamt', de:n=>`von ${n}`,
+  empate:(pv,n)=>`Gleichstand mit ${pv} SP: ${n} gewinnt, weil früher in der Spielreihenfolge.`,
+  gana:(n,d)=>`${n} gewinnt mit ${d} SP Vorsprung.`,
+  guardadaHist:'Partie im Verlauf gespeichert 📜',
+  borrarHist:'Verlauf löschen', histVacio:'🐀💤<br>Noch keine gespeicherten Partien.<br>Die Kolonie wartet!',
+  borrarHistT:'Verlauf löschen?', borrarHistTxt:'Alle gespeicherten Partien werden gelöscht. Das lässt sich nicht rückgängig machen (nicht mal mit dem Trank des Alchemisten).',
+  borrar:'Löschen', histBorrado:'Verlauf gelöscht',
+  girarT:'Stell mich auf!', girarP:'Dieser Zähler funktioniert nur im Hochformat.<br>Dreh dein Handy, um weiter Käse zu zählen.',
+  personaje:'Figur', tocaCerrar:'Zum Schließen tippen',
+  vicAria:'Sieger der Partie', vicLider:'Neues Oberhaupt der Kolonie', vicSolo:'Solo-Herausforderung beendet',
+  vicEmpate:'Sieg durch Spielreihenfolge', vicToca:'Tippen für das Podest', vicSoloFrase:'Schlägst du nächstes Mal deinen Rekord?',
+  frases:['Der ganze Käse aus der Vorratskammer gehört dir!','Nicht mal die Hofkatze konnte dich aufhalten!','Der Alchemist stößt auf dich an!',
+    'Der ordentlichste Bau im ganzen Wald!','So eine schlaue Ratte hat Wistar noch nie gesehen!','Deine Erfindungen sind der Neid der Kolonie!',
+    'Betten gebaut, Missionen erfüllt – ab ins Bett!'],
+  ayudaTitulo:'Schlusswertung', ayudaIntro:'Am Ende der 5. Runde kommen zu den SP auf der Leiste hinzu:',
+  ayudaLista:['SP der <b>Fähigkeits</b>-Felder auf deinem Spielertableau, von denen du einen Würfel entfernt hast (+2, wenn du das angegebene Paar vervollständigst).',
+    'SP des wertvollsten <b>Bett</b>-Feldes, das du aufgedeckt hast.',
+    'SP des wertvollsten gegrabenen <b>Raums</b> (belegt oder nicht).',
+    'SP der <b>Gastmäuse</b> auf deinem Tableau (inklusive Käse, der 6 wert ist).',
+    'Auf deinen ausgespielten <b>Erfindungen</b> aufgedruckte SP.',
+    'SP aus Erfindungen mit <b>Effekt bei Spielende</b>.',
+    '<b>2 SP</b>, wenn du die <b>fortgeschrittene Elektrizität</b> hast.',
+    '<b>1 SP je 5</b> Teile aus Holz, Metall, Bewegungsmarkern und Erfindungskarten auf der Hand.',
+    '<b>1 SP je 2</b> Jokermarker.'],
+  ayudaDesempate:'<b>Gleichstand:</b> Es gewinnt, wer in der Spielreihenfolge weiter vorne ist.', entendido:'Verstanden',
+  si:'Ja', cancelar:'Abbrechen',
+  cat:{
+    marcador:['SP auf der Leiste','Leiste','Die Siegpunkte, die ihr nach der 5. Runde auf der Siegpunktleiste des Spielplans habt.'],
+    habilidades:['Fähigkeiten','Fähigkeiten','Addiere die SP, die auf den Fähigkeits-Feldern deines Tableaus aufgedruckt sind, von denen du einen Würfel entfernt hast (die Würfel, die du auf Missionen gelegt hast). Achtung: Hast du beide Würfel des angegebenen Paares entfernt, gibt es 2 SP extra.'],
+    camas:['Betten','Betten','SP des wertvollsten Feldes deines Tableaus, von dem du ein Bettplättchen entfernt hast. Nur das höchste zählt.'],
+    habitaciones:['Räume','Räume','SP des wertvollsten Raums, von dem du das Untergrundplättchen entfernt hast. Zählt auch, wenn der Raum leer ist.'],
+    invitados:['Gastmäuse','Gäste','Addiere die SP der Gastmaus-Plättchen auf deinem Tableau (je 0 bis 3), inklusive des Käseplättchens, falls du es hast (6 SP).'],
+    inventos:['Erfindungen','Erfindungen','Addiere die SP, die auf den Erfindungskarten in deiner Spielzone aufgedruckt sind.'],
+    finales:['Erfindungen bei Spielende','Spielende','SP aus deinen ausgespielten Erfindungen mit Effekt bei Spielende.'],
+    electricidad:['Fortgeschrittene Elektrizität','Elektrizität','Hast du den Marker für fortgeschrittene Elektrizität? Er ist 2 SP wert.'],
+    recursos:['Übrige Ressourcen','Ressourcen','Zähle Holz, Metall, Bewegungsmarker und Erfindungskarten auf der Hand zusammen. Je 5 Teile = 1 SP. Das Teilen übernehme ich!'],
+    comodines:['Joker','Joker','Zähle deine Jokermarker. Je 2 Joker = 1 SP.']
+  },
+  per:{
+    azul:['Der Wissenschaftler','Runde Brille, Bleistift hinterm Ohr und Baupläne unterm Arm. Nichts verlässt den Bau, ohne durch seine Berechnungen zu gehen.'],
+    rojo:['Die Erfinderin','Fliegerbrille und eine Glühbirne, die immer leuchtet: Jede ihrer Ideen wird zu einer Erfindung.'],
+    amarillo:['Die Schweißerin','Schutzmaske, Handschuhe und Schraubenschlüssel. Wenn etwas knarzt, sich löst oder qualmt, macht sie es wie neu.'],
+    blanco:['Der Entdecker','Taschenlampe, Kompass und Rucksack: Es gibt keinen Winkel auf dem Hof, den er nicht erschnüffelt hat.']
+  }
+},
+it: {
+  locale:'it-IT', pv:'PV', titulo:'Segnapunti Rats of Wistar', marca:'Rats of Wistar · Segnapunti',
+  tocaEmpezar:'Tocca per iniziare', splashAria:'Rats of Wistar · Segnapunti. Tocca per iniziare',
+  colores:{azul:'Blu', rojo:'Rossa', amarillo:'Gialla', blanco:'Bianca'},
+  famDef:c=>`Famiglia ${c}`,
+  legal:`Segnapunti non ufficiale creato da <b>PenTech</b>. <i>Rats of Wistar</i> è un gioco di Simone Luciani e Danilo Sabia, pubblicato da <b>Cranio Creations</b>. Questa app non è affiliata né approvata dagli editori o dal Wistar Institute.`,
+  idioma:'Lingua', acceso:'Accesso', tienesClave:'Hai la chiave?',
+  introClave:'Inserisci la tua chiave di licenza per sbloccare il segnapunti senza limiti.',
+  phClave:'LA TUA CHIAVE', yaCompraste:'<b>L’hai già comprata?</b> La tua chiave è nell’e-mail di conferma di Buy Me a Coffee.',
+  desbloquear:'Sblocca', comprar:'Compra la chiave', probar:'Prova gratis',
+  pruebaPuedes:r=>`Puoi provare il segnapunti gratis per ${r} ${r===1?'partita':'partite'}.`,
+  pruebaAgotada:'Hai esaurito le partite di prova. Prendi la chiave per continuare a contare!',
+  modoPrueba:r=>`Modalità prova: ${r===1?'ti resta':'ti restano'} ${r} ${r===1?'partita':'partite'}.`,
+  claveOk:'Chiave corretta! Segnapunti sbloccato 🧀', claveMal:'Questa chiave sa di formaggio scaduto. Ricontrollala.',
+  silenciar:'Disattiva audio', activarSonido:'Attiva audio',
+  subtitulo:'Punteggio finale della colonia', nueva:'Nuova partita', continuar:'Continua partita',
+  historial:'Storico', comoPuntua:'Come si conta', volver:'Indietro', menu:'Menu', verResumen:'Vedi riepilogo',
+  famJuegan:'Quali famiglie giocano?', ordenTurno:'Giocatori nell’ordine di turno finale',
+  ayudaOrden:'Ordinali secondo l’ordine di turno alla fine del 5° round (dopo la Capanna dell’Alchimista). Serve per lo spareggio. Tocca un ratto per vederlo in grande.',
+  aContar:'Contiamo il formaggio!', soloModo:'Modalità solitario: segna i tuoi punti e prova a battere il tuo record.',
+  tocaFam:n=>`Tocca le famiglie per aggiungerle o toglierle · ${n} giocatori`,
+  minFam:'Deve giocare almeno una famiglia 🐀', subir:'Su', bajar:'Giù',
+  empezarCero:'Ricominciare da zero?', empezarCeroTxt:'C’è una partita in corso. Se ne inizi un’altra, andrà persa.',
+  recuento:'Conteggio', atras:'← Indietro', siguiente:'Avanti →', resultados:'🏆 Risultati',
+  restar:'Togli', sumar:'Aggiungi', catDe:(c,n)=>`${c} di ${n}`,
+  partidaGuardada:'Partita salvata. Puoi continuarla quando vuoi.',
+  editarPuntos:'Modifica punti', finReto:'Fine della partita!', guardarVolver:'Salva e torna al menu',
+  revancha:'Rivincita (stessi giocatori)', seguirContando:'Continua a contare', ganador:'Vincitore',
+  total:'Totale', de:n=>`su ${n}`,
+  empate:(pv,n)=>`Pareggio a ${pv} PV: vince ${n} perché viene prima nell’ordine di turno.`,
+  gana:(n,d)=>`${n} vince con ${d} PV di vantaggio.`,
+  guardadaHist:'Partita salvata nello storico 📜',
+  borrarHist:'Cancella storico', histVacio:'🐀💤<br>Nessuna partita salvata.<br>La colonia ti aspetta!',
+  borrarHistT:'Cancellare lo storico?', borrarHistTxt:'Tutte le partite salvate verranno eliminate. Non si torna indietro (nemmeno con la pozione dell’Alchimista).',
+  borrar:'Cancella', histBorrado:'Storico cancellato',
+  girarT:'Mettimi in piedi!', girarP:'Questo segnapunti funziona solo in verticale.<br>Ruota il telefono per continuare a contare formaggio.',
+  personaje:'Personaggio', tocaCerrar:'Tocca per chiudere',
+  vicAria:'Vincitore della partita', vicLider:'Nuovo capo della colonia', vicSolo:'Sfida in solitario conclusa',
+  vicEmpate:'Vittoria per ordine di turno', vicToca:'Tocca per vedere il podio', vicSoloFrase:'Batterai il tuo record la prossima volta?',
+  frases:['Tutto il formaggio della dispensa è tuo!','Nemmeno il gatto della fattoria ti ha fermato!','L’Alchimista brinda alla tua salute!',
+    'La tana più ordinata del bosco!','Wistar non ha mai visto un ratto così sveglio!','Le tue invenzioni sono l’invidia della colonia!',
+    'Letti fatti, missioni risolte e tutti a nanna!'],
+  ayudaTitulo:'Punteggio finale', ayudaIntro:'Alla fine del 5° round si sommano ai PV del tracciato:',
+  ayudaLista:['I PV degli spazi <b>abilità</b> della tua plancia da cui hai rimosso un cubo (+2 se completi la coppia indicata).',
+    'I PV dello spazio <b>letto</b> di valore più alto che hai scoperto.',
+    'I PV della <b>stanza</b> di valore più alto scavata (occupata o no).',
+    'I PV dei <b>topi ospiti</b> della tua plancia (incluso il formaggio, che vale 6).',
+    'I PV stampati sulle tue <b>invenzioni</b> giocate.',
+    'I PV delle invenzioni con <b>effetto di fine partita</b>.',
+    '<b>2 PV</b> se hai l’<b>elettricità avanzata</b>.',
+    '<b>1 PV ogni 5</b> elementi tra legno, metallo, segnalini movimento e carte invenzione in mano.',
+    '<b>1 PV ogni 2</b> segnalini jolly.'],
+  ayudaDesempate:'<b>Spareggio:</b> vince chi viene prima nell’ordine di turno.', entendido:'Capito',
+  si:'Sì', cancelar:'Annulla',
+  cat:{
+    marcador:['PV del tracciato','Tracciato','I punti vittoria che avete sul tracciato PV del tabellone dopo il 5° round.'],
+    habilidades:['Abilità','Abilità','Somma i PV stampati sugli spazi abilità della tua plancia da cui hai rimosso un cubo (i cubi messi sulle missioni). Attenzione: se hai rimosso entrambi i cubi della coppia indicata, aggiungi 2 PV.'],
+    camas:['Letti','Letti','I PV dello spazio di valore più alto della tua plancia da cui hai rimosso una tessera letto. Conta solo il più alto.'],
+    habitaciones:['Stanze','Stanze','I PV della stanza di valore più alto da cui hai rimosso la tessera sotterraneo. Conta anche se la stanza è vuota.'],
+    invitados:['Topi ospiti','Ospiti','Somma i PV delle tessere topo ospite della tua plancia (da 0 a 3 ciascuna), inclusa la tessera formaggio se ce l’hai (vale 6 PV).'],
+    inventos:['Invenzioni','Invenzioni','Somma i PV stampati sulle carte invenzione che hai giocato nella tua area di gioco.'],
+    finales:['Invenzioni di fine','Fine partita','I PV delle tue invenzioni giocate con effetto di fine partita.'],
+    electricidad:['Elettricità avanzata','Elettricità','Hai il segnalino elettricità avanzata? Vale 2 PV.'],
+    recursos:['Risorse avanzate','Risorse','Conta insieme legno, metallo, segnalini movimento e carte invenzione in mano. Ogni 5 elementi = 1 PV. La divisione la faccio io!'],
+    comodines:['Jolly','Jolly','Conta i tuoi segnalini jolly. Ogni 2 jolly = 1 PV.']
+  },
+  per:{
+    azul:['Lo Scienziato','Occhiali tondi, matita sull’orecchio e progetti sotto il braccio. Niente esce dalla tana senza passare dai suoi calcoli.'],
+    rojo:['L’Inventrice','Occhiali da aviatrice e una lampadina sempre accesa: ogni sua idea diventa un’invenzione.'],
+    amarillo:['La Saldatrice','Maschera, guanti e chiave inglese. Se qualcosa scricchiola, si stacca o fuma, lei lo rimette a nuovo.'],
+    blanco:['L’Esploratore','Torcia, bussola e zaino in spalla: non c’è angolo della fattoria che non abbia annusato.']
+  }
+}
+};
+/* Motor de idioma */
+const LS_IDIOMA='rw_idioma';
+function idiomaInicial(){
+  try{ const g=localStorage.getItem(LS_IDIOMA); if(g && T[JSON.parse(g)]) return JSON.parse(g); }catch(e){}
+  const prefs=(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||'es']);
+  for(const l of prefs){ const c=String(l).slice(0,2).toLowerCase(); if(T[c]) return c; }
+  return 'en';
+}
+let idioma = idiomaInicial();
+const L = () => T[idioma];
+const ORD = {es:n=>n+'º', it:n=>n+'º', en:n=>n+(['st','nd','rd'][n-1]||'th'), fr:n=>n+(n===1?'er':'e'), de:n=>n+'.'};
+const ord = n => (ORD[idioma]||ORD.es)(n);
+const t = (k, ...a) => { const v = (T[idioma][k] ?? T.es[k]); return typeof v === 'function' ? v(...a) : v; };
 
 /* ---------- Datos ---------- */
 const COLORES = [
@@ -521,36 +930,33 @@ const COLORES = [
   {id:'blanco', hex:'#efe6d2', txt:'#8a7552', nom:'Blanca'}
 ];
 const FAMILIAS_CON_AVATAR=['rojo','azul','amarillo','blanco'];
-const RX_NOMBRE_DEF=/^familia\s+(roja|azul|amarilla|blanca|verde|morada|gris)$/i;
-const esNombreDef = n => !n || RX_NOMBRE_DEF.test(String(n).trim());
-const nombreDef = id => `Familia ${(COLORES.find(c=>c.id===id)||{nom:'Blanca'}).nom}`;
+// el nombre de cada color sale del idioma activo
+COLORES.forEach(c=>Object.defineProperty(c,'nom',{get(){ return T[idioma].colores[c.id]; }}));
+// nombres por defecto en todos los idiomas (y los antiguos verde/morada/gris)
+const NOMBRES_DEF = new Set(Object.values(T).flatMap(l=>Object.values(l.colores).map(c=>l.famDef(c).toLowerCase())));
+const RX_NOMBRE_DEF=/^familia\s+(verde|morada|gris)$/i;
+const esNombreDef = n => !n || NOMBRES_DEF.has(String(n).trim().toLowerCase()) || RX_NOMBRE_DEF.test(String(n).trim());
+const nombreDef = id => T[idioma].famDef((COLORES.find(c=>c.id===id)||COLORES[3]).nom);
+const nomJ = (n, color) => esNombreDef(n) ? nombreDef(color) : n;
 function avatar(id, grande=false, nombre=''){
   if(FAMILIAS_CON_AVATAR.includes(id)) return `<img class="avatar" data-fam="${id}" data-nom="${esc(nombre||'')}" src="iconos/familias/${grande?'':'mini/'}${id}.webp" alt="" decoding="async" draggable="false">`;
   return ratSVG((COLORES.find(c=>c.id===id)||{hex:'#999'}).hex);
 }
 // tipo: 'pv' = número directo; 'toggle' = sí/no; 'cuenta' = se cuenta y se divide
 const CATEGORIAS = [
-  {id:'marcador', ico:'🏁', nom:'PV del marcador', corto:'Marcador', tipo:'pv', max:200,
-   desc:'Los puntos de victoria que lleváis en el marcador del tablero tras la 5.ª ronda.'},
-  {id:'habilidades', ico:'🧠', nom:'Habilidades', corto:'Habilidades', tipo:'pv', max:60,
-   desc:'Suma los PV impresos en los espacios de habilidad de tu tablero de los que has retirado un cubo (los cubos que colocaste en las misiones). Ojo: si retiraste los dos cubos de la pareja que lo indica, suma 2 PV extra.'},
-  {id:'camas', ico:'🛏️', nom:'Camas', corto:'Camas', tipo:'pv', max:40,
-   desc:'PV del espacio de mayor valor de tu tablero del que hayas retirado una loseta de cama. Solo cuenta el más alto.'},
-  {id:'habitaciones', ico:'⛏️', nom:'Habitaciones', corto:'Habitaciones', tipo:'pv', max:40,
-   desc:'PV de la habitación de mayor valor de la que hayas retirado la loseta subterránea. Cuenta aunque la habitación esté vacía.'},
-  {id:'invitados', ico:'🐭', nom:'Ratones invitados', corto:'Invitados', tipo:'pv', max:60,
-   desc:'Suma los PV de las losetas de ratón invitado de tu tablero (de 0 a 3 cada una), incluida la loseta de queso si la tienes (vale 6 PV).'},
-  {id:'inventos', ico:'⚙️', nom:'Inventos', corto:'Inventos', tipo:'pv', max:80,
-   desc:'Suma los PV impresos en las cartas de invento que tienes jugadas en tu zona de juego.'},
-  {id:'finales', ico:'🎯', nom:'Inventos de final', corto:'Ef. final', tipo:'pv', max:80,
-   desc:'PV que te dan los inventos jugados con efecto de final de partida.'},
-  {id:'electricidad', ico:'⚡', nom:'Electricidad avanzada', corto:'Electricidad', tipo:'toggle', valor:2,
-   desc:'¿Tienes la ficha de electricidad avanzada? Vale 2 PV.'},
-  {id:'recursos', ico:'🪵', nom:'Recursos sobrantes', corto:'Recursos', tipo:'cuenta', div:5, max:99,
-   desc:'Cuenta tus maderas, metales, fichas de movimiento y cartas de invento en la mano, todo junto. Cada 5 elementos = 1 PV. ¡Yo hago la división!'},
-  {id:'comodines', ico:'🃏', nom:'Comodines', corto:'Comodines', tipo:'cuenta', div:2, max:30,
-   desc:'Cuenta tus fichas de comodín. Cada 2 comodines = 1 PV.'}
+  {id:'marcador', tipo:'pv', max:200},
+  {id:'habilidades', tipo:'pv', max:60},
+  {id:'camas', tipo:'pv', max:40},
+  {id:'habitaciones', tipo:'pv', max:40},
+  {id:'invitados', tipo:'pv', max:60},
+  {id:'inventos', tipo:'pv', max:80},
+  {id:'finales', tipo:'pv', max:80},
+  {id:'electricidad', tipo:'toggle', valor:2},
+  {id:'recursos', tipo:'cuenta', div:5, max:99},
+  {id:'comodines', tipo:'cuenta', div:2, max:30}
 ];
+
+CATEGORIAS.forEach(c=>['nom','corto','desc'].forEach((p,k)=>Object.defineProperty(c,p,{get(){ return T[idioma].cat[c.id][k]; }})));
 
 /* ---------- Estado ---------- */
 const LS = {partida:'rw_partida', hist:'rw_historial', sonido:'rw_sonido', lic:'rw_licencia', usadas:'rw_pruebas'};
@@ -581,7 +987,7 @@ const $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function ir(id){ $$('.pantalla').forEach(p => p.classList.toggle('activa', p.id===id)); window.scrollTo(0,0); }
 function toast(t){ const el=$('#toast'); el.textContent=t; el.classList.add('ver'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('ver'),2200); }
-function confirmar(titulo, texto, si, txtSi='Sí'){
+function confirmar(titulo, texto, si, txtSi=t('si')){
   $('#confTitulo').textContent=titulo; $('#confTexto').textContent=texto; $('#confSi').textContent=txtSi;
   $('#confSi').onclick=()=>{ cerrarModales(); si(); };
   $('#modalConfirm').classList.add('activa');
@@ -590,8 +996,31 @@ function cerrarModales(){ $$('.modal').forEach(m=>m.classList.remove('activa'));
 $$('[data-cerrar]').forEach(b=>b.onclick=cerrarModales);
 $$('.modal').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m) cerrarModales(); }));
 $$('[data-volver]').forEach(b=>b.onclick=()=>{ clic(); ir(b.dataset.volver); });
-const VERSION='1.0';
-$$('[data-legal]').forEach(el=>el.innerHTML=TEXTO_LEGAL+`<div class="version">v${VERSION}</div>`);
+const VERSION='1.1';
+function aplicaIdioma(){
+  document.documentElement.lang=idioma; document.title=t('titulo');
+  $$('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));
+  $$('[data-ih]').forEach(e=>e.innerHTML=t(e.dataset.ih));
+  $$('[data-ia]').forEach(e=>e.setAttribute('aria-label',t(e.dataset.ia)));
+  $$('[data-ip]').forEach(e=>e.placeholder=t(e.dataset.ip));
+  $$('[data-ialt]').forEach(e=>e.alt=t(e.dataset.ialt));
+  $('#ayudaLista').innerHTML=L().ayudaLista.map(x=>`<li>${x}</li>`).join('');
+  $$('[data-legal]').forEach(el=>el.innerHTML=t('legal')+`<div class="version">v${VERSION}</div>`);
+  $$('.cod-idioma').forEach(e=>e.textContent=idioma.toUpperCase());
+  const tt=$('#splash .toca-txt'); if(tt) tt.style.setProperty('--fs', Math.min(6.6, 128/t('tocaEmpezar').length).toFixed(2)+'cqw');
+  // los nombres por defecto de la partida en curso cambian de idioma
+  if(partida && partida.jugadores){ partida.jugadores.forEach(j=>{ if(esNombreDef(j.nombre)) j.nombre=nombreDef(j.color); }); ls.set(LS.partida,partida); }
+}
+function abrirIdiomas(){
+  $('#listaIdiomas').innerHTML=IDIOMAS.map(l=>`<button class="btn ${l.id===idioma?'btn-queso':'btn-linea'}" data-l="${l.id}" lang="${l.id}">${l.nom}</button>`).join('');
+  $$('#listaIdiomas button').forEach(b=>b.onclick=()=>{
+    idioma=b.dataset.l; ls.set(LS_IDIOMA,idioma); aplicaIdioma(); cerrarModales();
+    if($('#acceso').classList.contains('activa')) prepararAcceso(); else pintaMenu();
+  });
+  $('#modalIdioma').classList.add('activa');
+}
+$$('.btn-idioma').forEach(b=>b.onclick=abrirIdiomas);
+aplicaIdioma();
 
 function ratSVG(color){
   return `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 40c0-12 10-22 24-22 6 0 10 1 14 4l6-6c3 0 5 2 5 5l-4 5c2 3 3 6 3 9 0 4-3 7-7 7H18c-6 0-10-1-10-2z" fill="${color}"/><circle cx="44" cy="17" r="7" fill="${color}"/><circle cx="44" cy="17" r="3.5" fill="#f2a7a0"/><circle cx="50" cy="31" r="2.3" fill="#2b2118"/><path d="M8 40c-6 2-7 10 2 12" stroke="${color}" stroke-width="3.5" fill="none" stroke-linecap="round"/></svg>`;
@@ -656,7 +1085,7 @@ function clic(){ /* el chillido lo pone el oyente global de botones */ }
 document.addEventListener('pointerdown', e=>{ const b=e.target.closest('button'); if(b && !b.disabled) chillido(); }, true);
 function chirrido(){ nota(1800,0,.06,'sine',.08); nota(2300,.06,.08,'sine',.07); }
 function fanfarria(){ [[523,0],[659,.12],[784,.24],[1047,.4],[784,.58],[1047,.7]].forEach(([f,t])=>nota(f,t,.25,'square',.08)); nota(262,.4,.8,'triangle',.18); }
-function pintaSonido(){ const b=$('#btnSonido'); b.innerHTML=`<img src="iconos/menu/sonido-${sonido?'on':'off'}.svg" alt="">`; b.setAttribute('aria-label', sonido?'Silenciar':'Activar sonido'); }
+function pintaSonido(){ const b=$('#btnSonido'); b.innerHTML=`<img src="iconos/menu/sonido-${sonido?'on':'off'}.svg" alt="">`; b.setAttribute('aria-label', sonido?t('silenciar'):t('activarSonido')); }
 $('#btnSonido').onclick=()=>{ sonido=!sonido; ls.set(LS.sonido,sonido); pintaSonido(); if(sonido){ ultimoChillido=0; chillido(); } else paraIntro(); };
 
 /* ---------- Splash ---------- */
@@ -684,14 +1113,14 @@ function entrar(){
 function pruebasRestantes(){ return Math.max(0, LICENCIA.partidasPrueba - ls.get(LS.usadas,0)); }
 function prepararAcceso(){
   const r=pruebasRestantes();
-  $('#txtPrueba').textContent = r>0 ? `Puedes probar el contador gratis durante ${r} ${r===1?'partida':'partidas'}.` : 'Ya has agotado las partidas de prueba. ¡Hazte con la clave para seguir contando!';
+  $('#txtPrueba').textContent = r>0 ? t('pruebaPuedes',r) : t('pruebaAgotada');
   $('#btnProbar').disabled = r<=0;
   $('#errClave').textContent='';
 }
 $('#btnValidar').onclick=()=>{
   const v=$('#inClave').value.trim().toUpperCase();
-  if(v && v===LICENCIA.clave.toUpperCase()){ ls.set(LS.lic,true); chirrido(); toast('¡Clave correcta! Contador desbloqueado 🧀'); pintaMenu(); ir('menu'); }
-  else { $('#errClave').textContent='Esa clave huele a queso caducado. Revísala.'; nota(200,0,.2,'square',.08); }
+  if(v && v===LICENCIA.clave.toUpperCase()){ ls.set(LS.lic,true); chirrido(); toast(t('claveOk')); pintaMenu(); ir('menu'); }
+  else { $('#errClave').textContent=t('claveMal'); nota(200,0,.2,'square',.08); }
 };
 $('#btnComprar').onclick=()=>window.open(LICENCIA.urlCompra,'_blank','noopener');
 $('#btnProbar').onclick=()=>{ if(pruebasRestantes()>0){ modoPrueba=true; clic(); pintaMenu(); ir('menu'); } };
@@ -702,7 +1131,7 @@ function pintaMenu(){
   pintaSonido();
   $('#btnContinuar').classList.toggle('oculto', !partida);
   const av=$('#avisoPrueba');
-  if(enPrueba()){ const r=pruebasRestantes(); av.textContent=`Modo prueba: te quedan ${r} ${r===1?'partida':'partidas'}.`; av.classList.remove('oculto'); }
+  if(enPrueba()){ const r=pruebasRestantes(); av.textContent=t('modoPrueba',r); av.classList.remove('oculto'); }
   else av.classList.add('oculto');
 }
 $('#btnNueva').onclick=()=>{
@@ -711,7 +1140,7 @@ $('#btnNueva').onclick=()=>{
     if(enPrueba() && pruebasRestantes()<=0){ prepararAcceso(); ir('acceso'); return; }
     abrirConfig();
   };
-  if(partida) confirmar('¿Empezar de cero?','Hay una partida a medias. Si empiezas otra, se perderá.',empezar,'Nueva partida');
+  if(partida) confirmar(t('empezarCero'),t('empezarCeroTxt'),empezar,t('nueva'));
   else empezar();
 };
 $('#btnContinuar').onclick=()=>{ clic(); if(partida.terminada) mostrarResultados(); else { ir('puntuar'); pintaCategoria(); } };
@@ -737,7 +1166,7 @@ function abrirConfig(previos){
 function alternarFamilia(id){
   const k=configJug.findIndex(j=>j.color===id);
   if(k>=0){
-    if(configJug.length===1){ toast('Tiene que jugar al menos una familia 🐀'); return; }
+    if(configJug.length===1){ toast(t('minFam')); return; }
     if(configJug[k].nombre) nombresMemo[id]=configJug[k].nombre;
     configJug.splice(k,1);
   } else {
@@ -750,7 +1179,7 @@ function pintaSelectorFam(){
   const tick='<svg viewBox="0 0 24 24"><path d="M5 12.5 L10 17 L19 7" fill="none" stroke="#fbf6ea" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   $('#selFam').innerHTML = COLORES.map(c=>{
     const on = configJug.some(j=>j.color===c.id);
-    return `<button class="${on?'on':''}" style="--c:${c.hex==='#efe6d2'?'#bfae8a':c.hex}" data-fam="${c.id}" aria-pressed="${on}" aria-label="Familia ${c.nom}">
+    return `<button class="${on?'on':''}" style="--c:${c.hex==='#efe6d2'?'#bfae8a':c.hex}" data-fam="${c.id}" aria-pressed="${on}" aria-label="${nombreDef(c.id)}">
       <span class="sf-ok">${tick}</span>
       <span class="sf-rata"><img src="iconos/familias/mini/${c.id}.webp" alt="" draggable="false"></span>
       <span class="sf-nom">${c.nom}</span></button>`;
@@ -759,15 +1188,15 @@ function pintaSelectorFam(){
 }
 function pintaConfig(){
   pintaSelectorFam();
-  $('#ayudaSolo').textContent = configN===1 ? 'Modo solitario: anota tus puntos e intenta batir tu propio récord.' : `Toca las familias para añadirlas o quitarlas · ${configN} jugadores`;
+  $('#ayudaSolo').textContent = configN===1 ? t('soloModo') : t('tocaFam',configN);
   const L=$('#listaJugadores'); L.innerHTML='';
   configJug.forEach((j,i)=>{
     const col=COLORES.find(c=>c.id===j.color);
     const fila=document.createElement('div'); fila.className='fila-jugador';
-    fila.innerHTML=`<div class="orden">${i+1}º</div>
+    fila.innerHTML=`<div class="orden">${ord(i+1)}</div>
       <div class="ficha ficha-cfg">${avatar(col.id,false,j.nombre)}</div>
-      <input maxlength="14" placeholder="Familia ${col.nom}" value="${esc(j.nombre)}">
-      ${configJug.length>1?`<div class="flechas"><button aria-label="Subir" ${i===0?"disabled":""}><svg viewBox="0 0 24 24"><path d="M5 15 L12 8 L19 15" fill="none" stroke="#3a2414" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button aria-label="Bajar" ${i===configJug.length-1?"disabled":""}><svg viewBox="0 0 24 24"><path d="M5 9 L12 16 L19 9" fill="none" stroke="#3a2414" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>`:""}`;
+      <input maxlength="14" placeholder="${esc(nombreDef(col.id))}" value="${esc(j.nombre)}">
+      ${configJug.length>1?`<div class="flechas"><button aria-label="${t('subir')}" ${i===0?"disabled":""}><svg viewBox="0 0 24 24"><path d="M5 15 L12 8 L19 15" fill="none" stroke="#3a2414" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button aria-label="${t('bajar')}" ${i===configJug.length-1?"disabled":""}><svg viewBox="0 0 24 24"><path d="M5 9 L12 16 L19 9" fill="none" stroke="#3a2414" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>`:""}`;
     if(i===filaMovida) fila.classList.add("movida");
     const inp=fila.querySelector('input');
     const [up,down]=fila.querySelectorAll('.flechas button');
@@ -784,7 +1213,7 @@ function pintaConfig(){
 $('#btnEmpezar').onclick=()=>{
   const jug=configJug.map((j,i)=>{
     const col=COLORES.find(c=>c.id===j.color);
-    return {nombre:(j.nombre||'').trim() || `Familia ${col.nom}`, color:j.color, orden:i};
+    return {nombre:(j.nombre||'').trim() || nombreDef(col.id), color:j.color, orden:i};
   });
   ls.set('rw_ultimos', jug.map(j=>({nombre: esNombreDef(j.nombre) ? '' : j.nombre, color:j.color})));
   const v={}; CATEGORIAS.forEach(c=>v[c.id]=jug.map(()=> c.tipo==='toggle'?false:0));
@@ -842,7 +1271,7 @@ function pintaMarcador(){
   M.dataset.clave = clave;
   M.innerHTML = partida.jugadores.map((j,i)=>{
     const col=COLORES.find(c=>c.id===j.color).hex;
-    return `<div class="chip" style="--c:${col}"><div class="n"><span class="marq"><span class="marq-in">${esc(j.nombre.replace(/^Familia\s+/i,""))}</span></span></div><div class="chip-fila">${avatar(j.color,false,j.nombre)}<div class="t">${total(i)}</div></div></div>`;
+    return `<div class="chip" style="--c:${col}"><div class="n"><span class="marq"><span class="marq-in">${esc(esNombreDef(j.nombre)?COLORES.find(c=>c.id===j.color).nom:j.nombre)}</span></span></div><div class="chip-fila">${avatar(j.color,false,j.nombre)}<div class="t">${total(i)}</div></div></div>`;
   }).join('');
   requestAnimationFrame(()=>activaMarquesinas(M));
 }
@@ -860,19 +1289,19 @@ function pintaCategoria(){
     const col=COLORES.find(c=>c.id===j.color).hex;
     const fila=document.createElement('div'); fila.className='fila-punt';
     const izq=`<div class="ficha ficha-punt">${avatar(j.color,false,j.nombre)}</div>
-      <div class="nombre"><span class="marq"><span class="marq-in">${esc(j.nombre)}</span></span>${cat.tipo==='cuenta'?`<div class="extra" data-extra>= ${pvCategoria(cat,i)} PV</div>`:''}</div>`;
+      <div class="nombre"><span class="marq"><span class="marq-in">${esc(j.nombre)}</span></span>${cat.tipo==='cuenta'?`<div class="extra" data-extra>= ${pvCategoria(cat,i)} ${t('pv')}</div>`:''}</div>`;
     if(cat.tipo==='toggle'){
-      fila.innerHTML=izq+`<button class="interruptor ${partida.valores[cat.id][i]?'on':''}" role="switch" aria-checked="${!!partida.valores[cat.id][i]}" aria-label="Electricidad avanzada"></button>`;
+      fila.innerHTML=izq+`<button class="interruptor ${partida.valores[cat.id][i]?'on':''}" role="switch" aria-checked="${!!partida.valores[cat.id][i]}" aria-label="${esc(cat.nom)}"></button>`;
       const sw=fila.querySelector('.interruptor');
       sw.onclick=()=>{ partida.valores[cat.id][i]=!partida.valores[cat.id][i]; sw.classList.toggle('on'); sw.setAttribute('aria-checked',partida.valores[cat.id][i]); partida.valores[cat.id][i]?chirrido():clic(); guardar(); pintaMarcador(); };
     } else {
-      fila.innerHTML=izq+`<div class="stepper"><button aria-label="Restar">−</button><input type="number" inputmode="numeric" min="0" max="${cat.max}" value="${partida.valores[cat.id][i]}" aria-label="${esc(cat.nom)} de ${esc(j.nombre)}"><button aria-label="Sumar">+</button></div>`;
+      fila.innerHTML=izq+`<div class="stepper"><button aria-label="${t('restar')}">−</button><input type="number" inputmode="numeric" min="0" max="${cat.max}" value="${partida.valores[cat.id][i]}" aria-label="${esc(t('catDe',cat.nom,j.nombre))}"><button aria-label="${t('sumar')}">+</button></div>`;
       const [menos,mas]=fila.querySelectorAll('.stepper button');
       const inp=fila.querySelector('input');
       const fijar=(n)=>{
         n=Math.max(0,Math.min(cat.max, Math.round(+n||0)));
         partida.valores[cat.id][i]=n; inp.value=n;
-        const ex=fila.querySelector('[data-extra]'); if(ex) ex.textContent=`= ${pvCategoria(cat,i)} PV`;
+        const ex=fila.querySelector('[data-extra]'); if(ex) ex.textContent=`= ${pvCategoria(cat,i)} ${t('pv')}`;
         guardar(); pintaMarcador();
       };
       repetir(menos,()=>{ fijar(partida.valores[cat.id][i]-1); clic(); });
@@ -884,7 +1313,7 @@ function pintaCategoria(){
     F.appendChild(fila);
   });
   $('#btnAnt').disabled = partida.paso===0;
-  $('#btnSig').textContent = partida.paso===CATEGORIAS.length-1 ? '🏆 Resultados' : 'Siguiente →';
+  $('#btnSig').textContent = partida.paso===CATEGORIAS.length-1 ? t('resultados') : t('siguiente');
   pintaMarcador(); pintaProgreso();
   requestAnimationFrame(()=>activaMarquesinas($('#catFilas')));
 }
@@ -901,17 +1330,15 @@ $('#btnSig').onclick=()=>{
   if(partida.paso<CATEGORIAS.length-1){ partida.paso++; guardar(); clic(); pintaCategoria(); }
   else { partida.terminada=true; guardar(); mostrarResultados(false, true); }
 };
-$('#btnSalirPunt').onclick=()=>{ clic(); pintaMenu(); ir('menu'); toast('Partida guardada. Puedes continuarla cuando quieras.'); };
+$('#btnSalirPunt').onclick=()=>{ clic(); pintaMenu(); ir('menu'); toast(t('partidaGuardada')); };
 $('#btnTabla').onclick=()=>{ clic(); mostrarResultados(true); };
 
 
 /* ---------- Ficha de personaje ---------- */
 const PERSONAJES = {
-  azul:     {rol:'El Científico',  txt:'#fff',    desc:'Gafas redondas, lápiz en la oreja y planos bajo el brazo. Nada sale de la madriguera sin pasar por sus cálculos.'},
-  rojo:     {rol:'La Inventora',   txt:'#fff',    desc:'Gafas de aviadora y una bombilla siempre encendida: cada idea suya acaba convertida en un invento.'},
-  amarillo: {rol:'La Soldadora',   txt:'#3a2414', desc:'Careta, guantes y llave inglesa. Si algo cruje, se suelta o echa humo, ella lo deja como nuevo.'},
-  blanco:   {rol:'El Explorador',  txt:'#3a2414', desc:'Linterna, brújula y mochila a la espalda: no queda rincón de la granja que no haya olfateado.'}
+  azul:{txt:'#fff'}, rojo:{txt:'#fff'}, amarillo:{txt:'#3a2414'}, blanco:{txt:'#3a2414'}
 };
+Object.entries(PERSONAJES).forEach(([id,p])=>['rol','desc'].forEach((k,i)=>Object.defineProperty(p,k,{get(){ return T[idioma].per[id][i]; }})));
 function abrirRata(fam, nombre){
   const per=PERSONAJES[fam]; if(!per) return;
   const col=COLORES.find(c=>c.id===fam)||{hex:'#999',nom:''};
@@ -919,7 +1346,7 @@ function abrirRata(fam, nombre){
   $('#zrRol').textContent=per.rol;
   const fn=$('#zrFam');
   const propio = nombre && !esNombreDef(nombre);
-  fn.textContent = propio ? `${nombre} · Familia ${col.nom}` : `Familia ${col.nom}`;
+  fn.textContent = propio ? `${nombre} · ${nombreDef(fam)}` : nombreDef(fam);
   fn.style.background=col.hex; fn.style.color=per.txt;
   $('#zrDesc').textContent=per.desc;
   const z=$('#zoomRata'); z.classList.remove('saliendo'); z.classList.add('activa');
@@ -954,15 +1381,6 @@ function sonVictoria(){
   const src=a.createBufferSource(), g=a.createGain(); src.buffer=bufVictoria; g.gain.value=1;
   src.connect(g).connect(a.destination); src.start();
 }
-const FRASES_VICTORIA = [
-  '¡Todo el queso de la despensa es tuyo!',
-  '¡Ni el gato de la granja ha podido contigo!',
-  '¡El Alquimista brinda a tu salud!',
-  '¡La madriguera más ordenada del bosque!',
-  '¡Wistar nunca vio una rata tan lista!',
-  '¡Tus inventos son la envidia de la colonia!',
-  '¡Camas hechas, misiones resueltas y a dormir!'
-];
 const FIGURAS_CONFETI = [
   // cuña de queso
   '<svg viewBox="0 0 24 24"><path d="M2 18 L22 18 L22 9 Z" fill="#d99a1e" stroke="#3a2414" stroke-width="1.6" stroke-linejoin="round"/><path d="M2 18 L22 9 L18 5 L2 14 Z" fill="#ffd34d" stroke="#3a2414" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="12" r="1.6" fill="#c98a12"/></svg>',
@@ -992,11 +1410,11 @@ function celebrarVictoria(alAcabar){
   const med=$('#vicMedallon');
   med.querySelectorAll('svg,img.avatar').forEach(x=>x.remove());
   med.insertAdjacentHTML('beforeend', avatar(g.color,true));
-  $('#vicSub').textContent = solo ? 'Fin del reto en solitario' : (empate ? 'Victoria por orden de turno' : 'Nuevo líder de la colonia');
+  $('#vicSub').textContent = solo ? t('vicSolo') : (empate ? t('vicEmpate') : t('vicLider'));
   const vn=$('#vicNombre'); vn.textContent = g.nombre;
   vn.style.fontSize = `min(${Math.min(11, 150/Math.max(g.nombre.length,1)).toFixed(2)}vw, 58px)`;
-  $('#vicPv').textContent = `${g.total} PV`;
-  $('#vicFrase').textContent = solo ? '¿Superarás tu récord la próxima vez?' : FRASES_VICTORIA[Math.floor(Math.random()*FRASES_VICTORIA.length)];
+  $('#vicPv').textContent = `${g.total} ${t('pv')}`;
+  $('#vicFrase').textContent = solo ? t('vicSoloFrase') : L().frases[Math.floor(Math.random()*L().frases.length)];
   const v=$('#victoria');
   v.classList.remove('saliendo'); v.classList.add('activa');
   lanzaConfeti(); sonVictoria();
@@ -1021,27 +1439,27 @@ function mostrarResultados(soloVer, celebrar){
   const pod=$('#podio'); pod.style.setProperty('--n', n); pod.className='podio n'+n;
   pod.innerHTML = orden.map(k=>{
     const p=cl[k], col=COLORES.find(c=>c.id===p.color).hex;
-    return `<div class="peana p${k+1}">${k===0?'<img class="corona" src="iconos/menu/corona.svg" alt="Ganador">':''}<div class="rata">${avatar(p.color,true,p.nombre)}</div><div class="nom"><span>${esc(p.nombre)}</span></div><div class="bloque"><div class="pos">${k+1}º</div><div class="pts">${p.total} PV</div></div></div>`;
+    return `<div class="peana p${k+1}">${k===0?`<img class="corona" src="iconos/menu/corona.svg" alt="${t('ganador')}">`:''}<div class="rata">${avatar(p.color,true,p.nombre)}</div><div class="nom"><span>${esc(p.nombre)}</span></div><div class="bloque"><div class="pos">${ord(k+1)}</div><div class="pts">${p.total} ${t('pv')}</div></div></div>`;
   }).join('');
   // tabla: columnas en orden de clasificación
   const cols=cl.map(p=>p.i);
   let h=`<colgroup><col class="c-cat">${cols.map(()=>'<col>').join('')}</colgroup><thead><tr><th></th>${cl.map((p,k)=>{
     const col=COLORES.find(c=>c.id===p.color).hex;
-    return `<th class="${k===0?'col-gana':''}"><div class="cab-jug">${avatar(p.color,false,p.nombre)}<span class="pos-mini">${k+1}º</span><span class="n" style="color:${COLORES.find(c=>c.id===p.color).txt||col}">${esc(p.nombre)}</span></div></th>`;
+    return `<th class="${k===0?'col-gana':''}"><div class="cab-jug">${avatar(p.color,false,p.nombre)}<span class="pos-mini">${ord(k+1)}</span><span class="n" style="color:${COLORES.find(c=>c.id===p.color).txt||col}">${esc(p.nombre)}</span></div></th>`;
   }).join('')}</tr></thead><tbody>`;
   CATEGORIAS.forEach(c=>{
     h+=`<tr><td><div class="celda-cat"><img src="iconos/${c.id}.png" alt=""><span>${c.corto}</span></div></td>${cols.map((i,k)=>{
       const pv=pvCategoria(c,i);
-      const det = c.tipo==='cuenta' ? `<small>de ${partida.valores[c.id][i]}</small>` : '';
+      const det = c.tipo==='cuenta' ? `<small>${t('de',partida.valores[c.id][i])}</small>` : '';
       return `<td class="v ${pv===0?'cero':''} ${k===0?'col-gana':''}">${pv}${det}</td>`;
     }).join('')}</tr>`;
   });
-  h+=`</tbody><tfoot><tr><td><div class="celda-cat"><span>Total</span></div></td>${cols.map((i,k)=>`<td class="v ${k===0?'col-gana':''}">${total(i)}</td>`).join('')}</tr></tfoot>`;
+  h+=`</tbody><tfoot><tr><td><div class="celda-cat"><span>${t('total')}</span></div></td>${cols.map((i,k)=>`<td class="v ${k===0?'col-gana':''}">${total(i)}</td>`).join('')}</tr></tfoot>`;
   $('#tablaRes').innerHTML=h;
   // aviso de desempate
   const emp = cl.length>1 && cl[0].total===cl[1].total;
-  $('#txtDesempate').textContent = emp ? `Empate a ${cl[0].total} PV: gana ${cl[0].nombre} por ir antes en el orden de turno.` : (cl.length>1 ? `${cl[0].nombre} gana por ${cl[0].total-cl[1].total} PV de ventaja.` : '');
-  $('#btnGuardar').innerHTML = soloVer && !partida.terminada ? '<img class="ico-btn" src="iconos/menu/editar.svg" alt="">Seguir contando' : '<img class="ico-btn" src="iconos/menu/guardar.svg" alt="">Guardar y volver al menú';
+  $('#txtDesempate').textContent = emp ? t('empate',cl[0].total,cl[0].nombre) : (cl.length>1 ? t('gana',cl[0].nombre,cl[0].total-cl[1].total) : '');
+  $('#btnGuardar').innerHTML = soloVer && !partida.terminada ? `<img class="ico-btn" src="iconos/menu/editar.svg" alt="">${t('seguirContando')}` : `<img class="ico-btn" src="iconos/menu/guardar.svg" alt="">${t('guardarVolver')}`;
   $('#btnRevancha').classList.toggle('oculto', soloVer && !partida.terminada);
   $('#btnGuardar').onclick = soloVer && !partida.terminada ? ()=>{ clic(); ir('puntuar'); } : guardarPartida;
   ir('resultados');
@@ -1057,7 +1475,7 @@ function guardarPartida(){
   ls.set(LS.hist, hist.slice(0,100));
   const jug=partida.jugadores;
   partida=null; ls.del(LS.partida);
-  toast('Partida guardada en el historial 📜');
+  toast(t('guardadaHist'));
   pintaMenu(); ir('menu');
   return jug;
 }
@@ -1071,18 +1489,18 @@ $('#btnRevancha').onclick=()=>{
 /* ---------- Historial ---------- */
 function pintaHistorial(){
   const hist=ls.get(LS.hist,[]); const L=$('#listaHist');
-  if(!hist.length){ L.innerHTML='<div class="vacio">🐀💤<br>Aún no hay partidas guardadas.<br>¡La colonia espera!</div>'; return; }
+  if(!hist.length){ L.innerHTML=`<div class="vacio">${t('histVacio')}</div>`; return; }
   L.innerHTML = hist.map(p=>{
     const g=p.ranking[0], col=COLORES.find(c=>c.id===g.color)?.hex||'#999';
-    const f=new Date(p.fecha).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'});
-    return `<div class="tarjeta partida"><div class="ficha ficha-hist">${avatar(g.color,false,g.nombre)}</div>
-      <div style="flex:1;min-width:0"><div class="fecha">${f}</div><div class="gan"><img class="ico-mini" src="iconos/menu/corona.svg" alt="">${esc(g.nombre)} · ${g.total} PV</div>
-      <div class="resto">${p.ranking.slice(1).map(r=>`${esc(r.nombre)} ${r.total}`).join(' · ')}</div></div></div>`;
+    const f=new Date(p.fecha).toLocaleDateString(t('locale'),{day:'numeric',month:'short',year:'numeric'});
+    return `<div class="tarjeta partida"><div class="ficha ficha-hist">${avatar(g.color,false,nomJ(g.nombre,g.color))}</div>
+      <div style="flex:1;min-width:0"><div class="fecha">${f}</div><div class="gan"><img class="ico-mini" src="iconos/menu/corona.svg" alt="">${esc(nomJ(g.nombre,g.color))} · ${g.total} ${t('pv')}</div>
+      <div class="resto">${p.ranking.slice(1).map(r=>`${esc(nomJ(r.nombre,r.color))} ${r.total}`).join(' · ')}</div></div></div>`;
   }).join('');
 }
 $('#btnBorrarHist').onclick=()=>{
   if(!ls.get(LS.hist,[]).length) return;
-  confirmar('¿Borrar historial?','Se eliminarán todas las partidas guardadas. No hay vuelta atrás (ni con la poción del Alquimista).',()=>{ ls.del(LS.hist); pintaHistorial(); toast('Historial borrado'); },'Borrar');
+  confirmar(t('borrarHistT'),t('borrarHistTxt'),()=>{ ls.del(LS.hist); pintaHistorial(); toast(t('histBorrado')); },t('borrar'));
 };
 
 /* ---------- PWA ---------- */
