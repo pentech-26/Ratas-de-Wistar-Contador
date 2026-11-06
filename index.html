@@ -64,12 +64,10 @@ html:has(#splash.activa), body:has(#splash.activa){background:#44261b}
 #splash .huellas{display:none}
 #splash .lienzo-splash{container-type:size}
 /* "Toca para empezar" dibujado encima de la imagen, en el idioma del móvil */
-#splash .toca{position:absolute;left:0;right:0;top:87%;display:flex;flex-direction:column;align-items:center;gap:1.4cqw;pointer-events:none;animation:respira 1.8s ease-in-out infinite}
+#splash .toca{position:absolute;left:0;right:0;top:88.5%;display:flex;flex-direction:column;align-items:center;gap:1.4cqw;pointer-events:none;animation:respira 1.8s ease-in-out infinite}
 #splash .toca-fila{display:flex;align-items:center;gap:2.6cqw;max-width:94cqw}
-#splash .toca-txt{font-family:'Baloo 2',cursive;font-weight:800;font-size:var(--fs,6.6cqw);line-height:1;color:#f6e7c8;white-space:nowrap;letter-spacing:.02em;
+#splash .toca-txt{font-family:'Baloo 2',cursive;font-weight:800;font-size:var(--fs,7.4cqw);line-height:1;color:#f6e7c8;white-space:nowrap;letter-spacing:.02em;
   text-shadow:0 .5cqw 0 #3a2414, 0 0 1.6cqw rgba(58,36,20,.9), 0 0 4cqw rgba(255,214,120,.35)}
-#splash .toca-rayos{width:7cqw;flex:none;overflow:visible}
-#splash .toca-pata{width:62cqw;height:auto;overflow:visible}
 @keyframes respira{50%{transform:scale(1.045);opacity:.85}}
 #splash .huellas span{position:absolute;width:9px;height:9px;border-radius:50%;background:rgba(255,221,107,.7);animation:pisada 4s linear infinite}
 @keyframes entraSplash{from{opacity:0;transform:scale(1.04)}to{opacity:1;transform:none}}
@@ -86,6 +84,7 @@ html:has(#splash.activa), body:has(#splash.activa){background:#44261b}
 .btn-idioma{position:relative}
 .cod-idioma{position:absolute;right:-7px;bottom:-7px;min-width:24px;background:var(--queso);color:#3a2414;border:2px solid #3a2414;border-radius:8px;font:800 11px/1 'Baloo 2',sans-serif;padding:3px 4px 2px;text-align:center}
 #listaIdiomas .btn{font-size:19px;padding:12px 16px}
+.fila-jugador input{text-overflow:ellipsis}
 .ico-grande{width:58px;height:58px}
 .duo-acceso{display:flex;justify-content:center;gap:4px}
 .ico-mini{width:22px;height:22px;vertical-align:-3px;margin-right:6px}
@@ -327,14 +326,14 @@ img.avatar[data-fam]{cursor:zoom-in;-webkit-touch-callout:none;-webkit-user-sele
   <div class="fondo-splash"></div>
   <div class="lienzo-splash" role="img" data-ia="splashAria" aria-label="Ratas de Wistar · Contador. Toca para empezar">
     <div class="brillo-toca"></div>
-    <div class="toca" aria-hidden="true"><div class="toca-fila"><svg class="toca-rayos" style="transform:scaleX(-1)" viewBox="0 0 40 40" aria-hidden="true"><g stroke="#f2b84b" stroke-width="4.5" stroke-linecap="round"><path d="M8 9 L30 15"/><path d="M4 20 L30 20"/><path d="M8 31 L30 25"/></g></svg><span class="toca-txt" data-i="tocaEmpezar">Toca para empezar</span><svg class="toca-rayos" viewBox="0 0 40 40" aria-hidden="true"><g stroke="#f2b84b" stroke-width="4.5" stroke-linecap="round"><path d="M8 9 L30 15"/><path d="M4 20 L30 20"/><path d="M8 31 L30 25"/></g></svg></div><svg class="toca-pata" viewBox="0 0 320 50" aria-hidden="true"><g stroke="#e9c27a" stroke-width="5" stroke-linecap="round"><path d="M4 25 H118"/><path d="M202 25 H316"/></g><g fill="#f2d39a"><ellipse cx="160" cy="33" rx="17" ry="14"/><ellipse cx="139" cy="17" rx="6.5" ry="8.5" transform="rotate(-20 139 17)"/><ellipse cx="152" cy="7" rx="6.5" ry="8.5" transform="rotate(-6 152 7)"/><ellipse cx="168" cy="7" rx="6.5" ry="8.5" transform="rotate(6 168 7)"/><ellipse cx="181" cy="17" rx="6.5" ry="8.5" transform="rotate(20 181 17)"/></g></svg></div>
+    <div class="toca" aria-hidden="true"><div class="toca-fila"><span class="toca-txt" data-i="tocaEmpezar">Toca para empezar</span></div></div>
     <div class="huellas" id="huellas"></div>
   </div>
 </section>
 
 <!-- ============ ACCESO (licencia) ============ -->
 <section id="acceso" class="pantalla">
-  <div class="cabecera"><h2 data-i="acceso">Acceso</h2><button class="icono-btn btn-idioma" data-ia="idioma" aria-label="Idioma"><img class="ico-cab" src="iconos/menu/idioma.svg" alt=""><span class="cod-idioma">ES</span></button></div>
+  <div class="cabecera"><h2 data-i="acceso">Acceso</h2><button class="icono-btn btn-idioma" data-ia="idioma" aria-label="Idioma"><img class="ico-cab" src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><g stroke=%22%233a2414%22 stroke-width=%223.2%22 stroke-linejoin=%22round%22 stroke-linecap=%22round%22><circle cx=%2232%22 cy=%2232%22 r=%2225%22 fill=%22%236f9cc4%22/><path d=%22M14 20 Q20 15 27 17 Q30 22 25 26 Q27 31 22 35 Q16 34 12 29 Q11 24 14 20 Z%22 fill=%22%236f8f4e%22/><path d=%22M35 13 Q43 12 50 18 Q52 25 46 27 Q41 24 38 28 Q42 34 40 41 Q35 47 31 45 Q30 38 33 33 Q29 29 31 22 Q33 17 35 13 Z%22 fill=%22%236f8f4e%22/><path d=%22M46 40 Q52 39 53 44 Q50 50 45 48 Z%22 fill=%22%236f8f4e%22/></g><g fill=%22none%22 stroke=%22%233a2414%22 stroke-width=%222%22 stroke-linecap=%22round%22 opacity=%22.55%22><ellipse cx=%2232%22 cy=%2232%22 rx=%2211%22 ry=%2225%22/><path d=%22M7 32 H57%22/><path d=%22M11 19 Q32 25 53 19%22/><path d=%22M11 45 Q32 39 53 45%22/></g><path d=%22M17 17 Q22 12 29 11%22 fill=%22none%22 stroke=%22%23e8f1f8%22 stroke-width=%222.6%22 stroke-linecap=%22round%22/><circle cx=%2232%22 cy=%2232%22 r=%2225%22 fill=%22none%22 stroke=%22%233a2414%22 stroke-width=%223.2%22/></svg>" alt=""><span class="cod-idioma">ES</span></button></div>
   <div class="tarjeta">
     <div class="duo-acceso"><img class="ico-grande" src="iconos/menu/llave.svg" alt=""><img class="ico-grande" src="iconos/menu/nueva.svg" alt=""></div>
     <h3 style="font-size:24px;margin:6px 0" data-i="tienesClave">¿Tienes la clave?</h3>
@@ -355,7 +354,7 @@ img.avatar[data-fam]{cursor:zoom-in;-webkit-touch-callout:none;-webkit-user-sele
 <!-- ============ MENÚ ============ -->
 <section id="menu" class="pantalla">
   <div class="cabecera">
-    <button class="icono-btn btn-idioma" data-ia="idioma" aria-label="Idioma"><img class="ico-cab" src="iconos/menu/idioma.svg" alt=""><span class="cod-idioma">ES</span></button>
+    <button class="icono-btn btn-idioma" data-ia="idioma" aria-label="Idioma"><img class="ico-cab" src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><g stroke=%22%233a2414%22 stroke-width=%223.2%22 stroke-linejoin=%22round%22 stroke-linecap=%22round%22><circle cx=%2232%22 cy=%2232%22 r=%2225%22 fill=%22%236f9cc4%22/><path d=%22M14 20 Q20 15 27 17 Q30 22 25 26 Q27 31 22 35 Q16 34 12 29 Q11 24 14 20 Z%22 fill=%22%236f8f4e%22/><path d=%22M35 13 Q43 12 50 18 Q52 25 46 27 Q41 24 38 28 Q42 34 40 41 Q35 47 31 45 Q30 38 33 33 Q29 29 31 22 Q33 17 35 13 Z%22 fill=%22%236f8f4e%22/><path d=%22M46 40 Q52 39 53 44 Q50 50 45 48 Z%22 fill=%22%236f8f4e%22/></g><g fill=%22none%22 stroke=%22%233a2414%22 stroke-width=%222%22 stroke-linecap=%22round%22 opacity=%22.55%22><ellipse cx=%2232%22 cy=%2232%22 rx=%2211%22 ry=%2225%22/><path d=%22M7 32 H57%22/><path d=%22M11 19 Q32 25 53 19%22/><path d=%22M11 45 Q32 39 53 45%22/></g><path d=%22M17 17 Q22 12 29 11%22 fill=%22none%22 stroke=%22%23e8f1f8%22 stroke-width=%222.6%22 stroke-linecap=%22round%22/><circle cx=%2232%22 cy=%2232%22 r=%2225%22 fill=%22none%22 stroke=%22%233a2414%22 stroke-width=%223.2%22/></svg>" alt=""><span class="cod-idioma">ES</span></button>
     <span style="flex:1"></span>
     <button class="icono-btn" id="btnSonido" aria-label="Sonido"><img src="iconos/menu/sonido-on.svg" alt=""></button>
   </div>
@@ -513,7 +512,7 @@ img.avatar[data-fam]{cursor:zoom-in;-webkit-touch-callout:none;-webkit-user-sele
 </div>
 <div class="modal" id="modalIdioma">
   <div class="tarjeta">
-    <h3><img class="ico-btn" src="iconos/menu/idioma.svg" alt="" style="vertical-align:-8px;margin-right:6px"><span data-i="idioma">Idioma</span></h3>
+    <h3><img class="ico-btn" src="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><g stroke=%22%233a2414%22 stroke-width=%223.2%22 stroke-linejoin=%22round%22 stroke-linecap=%22round%22><circle cx=%2232%22 cy=%2232%22 r=%2225%22 fill=%22%236f9cc4%22/><path d=%22M14 20 Q20 15 27 17 Q30 22 25 26 Q27 31 22 35 Q16 34 12 29 Q11 24 14 20 Z%22 fill=%22%236f8f4e%22/><path d=%22M35 13 Q43 12 50 18 Q52 25 46 27 Q41 24 38 28 Q42 34 40 41 Q35 47 31 45 Q30 38 33 33 Q29 29 31 22 Q33 17 35 13 Z%22 fill=%22%236f8f4e%22/><path d=%22M46 40 Q52 39 53 44 Q50 50 45 48 Z%22 fill=%22%236f8f4e%22/></g><g fill=%22none%22 stroke=%22%233a2414%22 stroke-width=%222%22 stroke-linecap=%22round%22 opacity=%22.55%22><ellipse cx=%2232%22 cy=%2232%22 rx=%2211%22 ry=%2225%22/><path d=%22M7 32 H57%22/><path d=%22M11 19 Q32 25 53 19%22/><path d=%22M11 45 Q32 39 53 45%22/></g><path d=%22M17 17 Q22 12 29 11%22 fill=%22none%22 stroke=%22%23e8f1f8%22 stroke-width=%222.6%22 stroke-linecap=%22round%22/><circle cx=%2232%22 cy=%2232%22 r=%2225%22 fill=%22none%22 stroke=%22%233a2414%22 stroke-width=%223.2%22/></svg>" alt="" style="vertical-align:-8px;margin-right:6px"><span data-i="idioma">Idioma</span></h3>
     <div class="pila" id="listaIdiomas" style="margin-top:12px"></div>
   </div>
 </div>
@@ -538,7 +537,7 @@ const LICENCIA = {
    el bloque 'es', tradúcelo y añádelo a IDIOMAS.
    ===================================================== */
 const IDIOMAS = [
-  {id:'es', nom:'Español'}, {id:'en', nom:'English'}, {id:'fr', nom:'Français'},
+  {id:'es', nom:'Español'}, {id:'ca', nom:'Català'}, {id:'en', nom:'English'}, {id:'fr', nom:'Français'},
   {id:'de', nom:'Deutsch'}, {id:'it', nom:'Italiano'}
 ];
 const T = {
@@ -613,6 +612,79 @@ es: {
     rojo:['La Inventora','Gafas de aviadora y una bombilla siempre encendida: cada idea suya acaba convertida en un invento.'],
     amarillo:['La Soldadora','Careta, guantes y llave inglesa. Si algo cruje, se suelta o echa humo, ella lo deja como nuevo.'],
     blanco:['El Explorador','Linterna, brújula y mochila a la espalda: no queda rincón de la granja que no haya olfateado.']
+  }
+},
+ca: {
+  locale:'ca-ES', pv:'PV', titulo:'Comptador Rates de Wistar', marca:'Rates de Wistar · Comptador', tocaEmpezar:'Toca per començar',
+  splashAria:'Rates de Wistar · Comptador. Toca per començar',
+  colores:{azul:'Blava', rojo:'Vermella', amarillo:'Groga', blanco:'Blanca'},
+  famDef:c=>`Família ${c}`,
+  legal:`Comptador no oficial creat per <b>PenTech</b>. <i>Rats of Wistar</i> és un joc de Simone Luciani i Danilo Sabia, editat per Cranio Creations i a Espanya per <b>Maldito Games</b>. Aquesta app no està afiliada ni avalada pels editors ni pel Wistar Institute.`,
+  idioma:'Idioma', acceso:'Accés', tienesClave:'Tens la clau?',
+  introClave:'Introdueix la teva clau de llicència per desbloquejar el comptador sense límits.',
+  phClave:'LA TEVA CLAU', yaCompraste:'<b>Ja l’has comprada?</b> La teva clau és al correu de confirmació de Buy Me a Coffee.',
+  desbloquear:'Desbloquejar', comprar:'Comprar la clau', probar:'Provar-lo gratis',
+  pruebaPuedes:r=>`Pots provar el comptador gratis durant ${r} ${r===1?'partida':'partides'}.`,
+  pruebaAgotada:'Ja has esgotat les partides de prova. Fes-te amb la clau per continuar comptant!',
+  modoPrueba:r=>`Mode prova: ${r===1?'et queda':'et queden'} ${r} ${r===1?'partida':'partides'}.`,
+  claveOk:'Clau correcta! Comptador desbloquejat 🧀', claveMal:'Aquesta clau fa olor de formatge caducat. Revisa-la.',
+  silenciar:'Silenciar', activarSonido:'Activar el so',
+  subtitulo:'Recompte final de la colònia', nueva:'Nova partida', continuar:'Continuar la partida',
+  historial:'Historial', comoPuntua:'Com es puntua', volver:'Tornar', menu:'Menú', verResumen:'Veure el resum',
+  famJuegan:'Quines famílies juguen?', ordenTurno:'Jugadors en ordre de torn final',
+  ayudaOrden:'Ordena’ls segons l’ordre de torn en acabar la 5a ronda (després de la Cabana de l’Alquimista). Serveix per al desempat. Toca la rata per veure-la en gran.',
+  aContar:'A comptar formatge!', soloModo:'Mode solitari: apunta els teus punts i intenta batre el teu propi rècord.',
+  tocaFam:n=>`Toca les famílies per afegir-les o treure-les · ${n} jugadors`,
+  minFam:'Ha de jugar com a mínim una família 🐀', subir:'Pujar', bajar:'Baixar',
+  empezarCero:'Començar de zero?', empezarCeroTxt:'Hi ha una partida a mitges. Si en comences una altra, es perdrà.',
+  recuento:'Recompte', atras:'← Enrere', siguiente:'Següent →', resultados:'🏆 Resultats',
+  restar:'Restar', sumar:'Sumar', catDe:(c,n)=>`${c} de ${n}`,
+  partidaGuardada:'Partida desada. Pots continuar-la quan vulguis.',
+  editarPuntos:'Editar punts', finReto:'Fi del repte!', guardarVolver:'Desar i tornar al menú',
+  revancha:'Revenja (mateixos jugadors)', seguirContando:'Continuar comptant', ganador:'Guanyador',
+  total:'Total', de:n=>`de ${n}`,
+  empate:(pv,n)=>`Empat a ${pv} PV: guanya ${n} per anar abans en l’ordre de torn.`,
+  gana:(n,d)=>`${n} guanya per ${d} PV d’avantatge.`,
+  guardadaHist:'Partida desada a l’historial 📜',
+  borrarHist:'Esborrar l’historial', histVacio:'🐀💤<br>Encara no hi ha partides desades.<br>La colònia t’espera!',
+  borrarHistT:'Esborrar l’historial?', borrarHistTxt:'S’eliminaran totes les partides desades. No hi ha marxa enrere (ni amb la poció de l’Alquimista).',
+  borrar:'Esborrar', histBorrado:'Historial esborrat',
+  girarT:'Posa’m dret!', girarP:'Aquest comptador només funciona en vertical.<br>Gira el mòbil per continuar comptant formatge.',
+  personaje:'Personatge', tocaCerrar:'Toca per tancar',
+  vicAria:'Guanyador de la partida', vicLider:'Nou líder de la colònia', vicSolo:'Fi del repte en solitari',
+  vicEmpate:'Victòria per ordre de torn', vicToca:'Toca per veure el podi', vicSoloFrase:'Superaràs el teu rècord la propera vegada?',
+  frases:['Tot el formatge del rebost és teu!','Ni el gat de la granja ha pogut amb tu!','L’Alquimista brinda per tu!',
+    'El cau més endreçat del bosc!','Wistar no havia vist mai una rata tan llesta!','Els teus invents són l’enveja de la colònia!',
+    'Llits fets, missions resoltes i a dormir!'],
+  ayudaTitulo:'Puntuació final', ayudaIntro:'En acabar la 5a ronda se sumen als PV del marcador:',
+  ayudaLista:['PV dels espais d’<b>habilitat</b> del teu tauler dels quals has retirat un cub (+2 si completes la parella que ho indica).',
+    'PV de l’espai de <b>llit</b> de més valor que hagis descobert.',
+    'PV de l’<b>habitació</b> de més valor excavada (ocupada o no).',
+    'PV dels <b>ratolins convidats</b> del teu tauler (inclòs el formatge, que en val 6).',
+    'PV impresos als teus <b>invents</b> jugats.',
+    'PV dels invents amb <b>efecte de final de partida</b>.',
+    '<b>2 PV</b> si tens l’<b>electricitat avançada</b>.',
+    '<b>1 PV per cada 5</b> elements entre fusta, metall, fitxes de moviment i cartes d’invent a la mà.',
+    '<b>1 PV per cada 2</b> fitxes de comodí.'],
+  ayudaDesempate:'<b>Desempat:</b> guanya qui vagi abans en l’ordre de torn.', entendido:'Entesos',
+  si:'Sí', cancelar:'Cancel·lar',
+  cat:{
+    marcador:['PV del marcador','Marcador','Els punts de victòria que teniu al marcador del tauler després de la 5a ronda.'],
+    habilidades:['Habilitats','Habilitats','Suma els PV impresos als espais d’habilitat del teu tauler dels quals has retirat un cub (els cubs que vas col·locar a les missions). Compte: si has retirat els dos cubs de la parella que ho indica, suma 2 PV extra.'],
+    camas:['Llits','Llits','PV de l’espai de més valor del teu tauler del qual hagis retirat una peça de llit. Només compta el més alt.'],
+    habitaciones:['Habitacions','Habitacions','PV de l’habitació de més valor de la qual hagis retirat la peça subterrània. Compta encara que l’habitació sigui buida.'],
+    invitados:['Ratolins convidats','Convidats','Suma els PV de les peces de ratolí convidat del teu tauler (de 0 a 3 cadascuna), inclosa la peça de formatge si la tens (val 6 PV).'],
+    inventos:['Invents','Invents','Suma els PV impresos a les cartes d’invent que tens jugades a la teva zona de joc.'],
+    finales:['Invents de final','Ef. final','PV que et donen els invents jugats amb efecte de final de partida.'],
+    electricidad:['Electricitat avançada','Electricitat','Tens la fitxa d’electricitat avançada? Val 2 PV.'],
+    recursos:['Recursos sobrants','Recursos','Compta les fustes, metalls, fitxes de moviment i cartes d’invent a la mà, tot junt. Cada 5 elements = 1 PV. La divisió la faig jo!'],
+    comodines:['Comodins','Comodins','Compta les fitxes de comodí. Cada 2 comodins = 1 PV.']
+  },
+  per:{
+    azul:['El Científic','Ulleres rodones, llapis a l’orella i plànols sota el braç. Res no surt del cau sense passar pels seus càlculs.'],
+    rojo:['La Inventora','Ulleres d’aviadora i una bombeta sempre encesa: cada idea seva acaba convertida en un invent.'],
+    amarillo:['La Soldadora','Careta, guants i clau anglesa. Si alguna cosa grinyola, es deixa anar o fa fum, ella la deixa com nova.'],
+    blanco:['L’Explorador','Llanterna, brúixola i motxilla a l’esquena: no queda racó de la granja que no hagi ensumat.']
   }
 },
 en: {
@@ -918,7 +990,7 @@ function idiomaInicial(){
 }
 let idioma = idiomaInicial();
 const L = () => T[idioma];
-const ORD = {es:n=>n+'º', it:n=>n+'º', en:n=>n+(['st','nd','rd'][n-1]||'th'), fr:n=>n+(n===1?'er':'e'), de:n=>n+'.'};
+const ORD = {ca:n=>n+(['r','n','r','t'][n-1]||'è'), es:n=>n+'º', it:n=>n+'º', en:n=>n+(['st','nd','rd'][n-1]||'th'), fr:n=>n+(n===1?'er':'e'), de:n=>n+'.'};
 const ord = n => (ORD[idioma]||ORD.es)(n);
 const t = (k, ...a) => { const v = (T[idioma][k] ?? T.es[k]); return typeof v === 'function' ? v(...a) : v; };
 
@@ -1007,7 +1079,7 @@ function aplicaIdioma(){
   $('#ayudaLista').innerHTML=L().ayudaLista.map(x=>`<li>${x}</li>`).join('');
   $$('[data-legal]').forEach(el=>el.innerHTML=t('legal')+`<div class="version">v${VERSION}</div>`);
   $$('.cod-idioma').forEach(e=>e.textContent=idioma.toUpperCase());
-  const tt=$('#splash .toca-txt'); if(tt) tt.style.setProperty('--fs', Math.min(6.6, 128/t('tocaEmpezar').length).toFixed(2)+'cqw');
+  const tt=$('#splash .toca-txt'); if(tt) tt.style.setProperty('--fs', Math.min(7.4, 150/t('tocaEmpezar').length).toFixed(2)+'cqw');
   // los nombres por defecto de la partida en curso cambian de idioma
   if(partida && partida.jugadores){ partida.jugadores.forEach(j=>{ if(esNombreDef(j.nombre)) j.nombre=nombreDef(j.color); }); ls.set(LS.partida,partida); }
 }
